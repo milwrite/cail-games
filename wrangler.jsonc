@@ -1,0 +1,6 @@
+{
+  "name": "cail-games",
+  "account_id": "452c33847cf5cb1e46f391fca32fd1b5",
+  "compatibility_date": "2026-09-12",
+  "assets": { "directory": "./dist" }
+}
