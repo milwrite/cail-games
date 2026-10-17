@@ -1,0 +1,125 @@
+[
+  {
+    "game": "cadavre",
+    "view": 1,
+    "caption": "Set the table",
+    "alt": "Cadavre Exquis table setup with DeepSeek V4 Flash, word limits, and player seating.",
+    "source": "https://cadavre.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:40:40.122Z"
+  },
+  {
+    "game": "cadavre",
+    "view": 2,
+    "caption": "The open sheet",
+    "alt": "Cadavre Exquis solo poem with the simplified Poem menu, model selection, and writing options.",
+    "source": "https://cadavre.ailab-452.workers.dev/play/",
+    "capturedAt": "2026-10-17T04:43:26.481Z"
+  },
+  {
+    "game": "cadavre",
+    "view": 3,
+    "caption": "Reveal and read",
+    "alt": "Cadavre Exquis finished poem, copper moon / cooled by rain, alongside a model-generated close reading.",
+    "source": "https://cadavre.ailab-452.workers.dev/play/",
+    "capturedAt": "2026-10-17T04:44:08.592Z"
+  },
+  {
+    "game": "cloze",
+    "view": 1,
+    "caption": "Read the passage",
+    "alt": "Cloze Reader passage with one missing word, its book attribution, and reading context.",
+    "source": "https://cloze.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:39:21.614Z"
+  },
+  {
+    "game": "cloze",
+    "view": 2,
+    "caption": "Contextual hints",
+    "alt": "Cloze Reader showing contextual hints beneath the passage.",
+    "source": "https://cloze.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:39:21.904Z"
+  },
+  {
+    "game": "cloze",
+    "view": 3,
+    "caption": "Ask about a word",
+    "alt": "Cloze Reader word-help dialog with a generated part-of-speech hint and follow-up questions.",
+    "source": "https://cloze.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:39:45.088Z"
+  },
+  {
+    "game": "haggle",
+    "view": 1,
+    "caption": "Choose a model",
+    "alt": "Haggle opening screen with three browser-local model options.",
+    "source": "https://zweibel.net/haggle/",
+    "capturedAt": "2026-10-17T04:33:26.966873+00:00"
+  },
+  {
+    "game": "haggle",
+    "view": 2,
+    "caption": "Stock and price",
+    "alt": "Haggle morning shelf setup with a healing potion and editable price.",
+    "source": "https://zweibel.net/haggle/",
+    "capturedAt": "2026-10-17T04:34:12.185481+00:00"
+  },
+  {
+    "game": "haggle",
+    "view": 3,
+    "caption": "The shop floor",
+    "alt": "Haggle shop with stocked shelves and a visiting customer’s model-generated dialogue.",
+    "source": "https://zweibel.net/haggle/",
+    "capturedAt": "2026-10-17T04:39:21.487Z"
+  },
+  {
+    "game": "jeopardy",
+    "view": 1,
+    "caption": "The board",
+    "alt": "JeopardyLM board with six generated categories and thirty playable clues.",
+    "source": "https://jeopardy.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:40:40.145Z"
+  },
+  {
+    "game": "jeopardy",
+    "view": 2,
+    "caption": "Play a clue",
+    "alt": "JeopardyLM displaying a two-hundred-dollar astronomy clue and its reveal control.",
+    "source": "https://jeopardy.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:40:50.882Z"
+  },
+  {
+    "game": "jeopardy",
+    "view": 3,
+    "caption": "Create a board",
+    "alt": "JeopardyLM board creation dialog with DeepSeek V4 Flash selected and six optional category topics.",
+    "source": "https://jeopardy.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T04:41:28.603Z"
+  },
+  {
+    "game": "langames",
+    "view": 1,
+    "caption": "Wordle",
+    "alt": "LanGames German Wordle round with a five-letter guess on the board.",
+    "source": "https://stefanomorello.com/langames/wordle-adaptive.html",
+    "capturedAt": "2026-10-17T04:43:26.442Z",
+    "attribution": "Author public sample lesson: https://github.com/smorello87/LanGames/blob/main/content/HZM4O1GN.json"
+  },
+  {
+    "game": "langames",
+    "view": 2,
+    "caption": "Memory match",
+    "alt": "LanGames vocabulary memory board with a revealed German food card.",
+    "source": "https://stefanomorello.com/langames/memory-adaptive.html",
+    "capturedAt": "2026-10-17T04:39:14.197Z",
+    "attribution": "Author public sample lesson: https://github.com/smorello87/LanGames/blob/main/content/HZM4O1GN.json"
+  },
+  {
+    "game": "langames",
+    "view": 3,
+    "caption": "Verb conjugation wheel",
+    "alt": "LanGames present-tense conjugation wheel and German verb practice.",
+    "source": "https://stefanomorello.com/langames/tenses-adaptive.html",
+    "capturedAt": "2026-10-17T04:40:04.436Z",
+    "attribution": "Author public sample lesson: https://github.com/smorello87/LanGames/blob/main/content/HZM4O1GN.json"
+  }
+]

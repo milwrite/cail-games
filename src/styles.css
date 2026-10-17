@@ -59,3 +59,18 @@ h1{margin:0 0 20px;font-size:clamp(40px,5.8vw,76px);font-weight:400;line-height:
 .login-link::before,.login-link::after{content:'';position:absolute;width:7px;height:7px;border:solid var(--muted);pointer-events:none}.login-link::before{left:-4px;top:-4px;border-width:0 1px 1px 0}.login-link::after{right:-4px;bottom:-4px;border-width:1px 0 0 1px}
 .site-header nav .login-link:hover,.site-header nav .login-link:focus-visible{color:var(--cyan);border-color:var(--cyan)}
 @media(max-width:380px){.brand img{width:90px}.brand span{font-size:16px;padding-left:8px}.brand{gap:8px}.site-header nav .login-link{font-size:var(--suite-small);padding:10px}}
+
+.preview-gallery{margin-top:20px;border-top:1px solid var(--line);padding-top:24px;min-width:0}
+.preview-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.preview-heading h2{font:500 1.375rem/1.3 var(--suite-font);margin:0}
+.preview-controls{display:flex;align-items:center;gap:8px}.preview-controls[hidden],.preview-stage [hidden]{display:none}
+.preview-controls span{font:400 .9375rem/1.5 var(--mono);color:var(--muted);margin-right:8px}
+.preview-controls button{min-width:44px;min-height:44px;border:1px solid var(--line);padding:8px 12px;background:var(--card);color:var(--text);font:500 1rem/1.5 var(--suite-font);cursor:pointer}
+.preview-controls button:hover,.preview-controls button:focus-visible{color:var(--accent);border-color:var(--accent)}
+.preview-controls [data-rotation]{min-width:76px}
+.preview-stage{border:1px solid var(--line);background:var(--charcoal)}
+.preview-stage figure{margin:0}.preview-stage a{display:block}.preview-stage a:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.preview-stage img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#17191b}
+.preview-stage figcaption{padding:12px 16px;border-top:1px solid var(--line);font-size:1rem;color:var(--muted)}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:680px){.preview-gallery{margin-top:8px;padding-top:20px}.preview-heading{gap:12px}.preview-controls{gap:6px}.preview-controls span{margin-right:2px}.preview-stage figcaption{padding:10px 12px}}
