@@ -4,6 +4,7 @@ const origins = Object.freeze({
   cadavre: 'https://cadavre.ailab-452.workers.dev',
   jeopardy: 'https://jeopardy.ailab-452.workers.dev',
   cloze: 'https://cloze.ailab-452.workers.dev',
+  'cli-adventures': 'https://cli-adventures.ailab-452.workers.dev',
 });
 const privateHeaders = { 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' };
 export default {
@@ -18,7 +19,7 @@ export default {
     if (url.pathname === '/health') {
       const checks = await Promise.all(Object.keys(origins).map(async app => {
         try {
-          const response = await env[app.toUpperCase()].fetch(new Request(origins[app] + '/health', {signal:AbortSignal.timeout(5000)}));
+          const response = await env[app.replaceAll('-', '_').toUpperCase()].fetch(new Request(origins[app] + '/health', {signal:AbortSignal.timeout(5000)}));
           const data = await response.json();
           return [app, {ok:response.ok && data.ok === true, release:data.release || null}];
         } catch { return [app, {ok:false,release:null}]; }
@@ -27,7 +28,7 @@ export default {
       const ok = checks.every(([, game]) => game.ok);
       return Response.json({ok,release:env.RELEASE,games}, {status:ok ? 200 : 503,headers:privateHeaders});
     }
-    const launch = url.pathname.match(/^\/play\/([a-z]+)\/?$/);
+    const launch = url.pathname.match(/^\/play\/([a-z][a-z0-9-]*)\/?$/);
     const match = url.pathname.match(/^\/(cadavre|jeopardy|cloze)(\/.*)?$/);
     const game = launch && games.find(game => game.id === launch[1]);
     // Preserve older deep links and saved-work launch URLs; base routes are project pages.

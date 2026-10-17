@@ -40,3 +40,5 @@ await capturePreview(tab, {
 ```
 
 Repeat for views 1–3 of each game. The helper captures the viewport and updates the manifest automatically. Use the default desktop viewport, wait for visible loading indicators to finish, and review every captured image before rebuilding. `npm run build` requires three captures for every game and checks that their files exist. No model calls run when someone views a gallery.
+
+CLI Adventures is hosted on the Lab’s cli-adventures Worker. The sixth card has a source-checked description and three live screenshots. The homepage lights a random card for 250ms every three seconds, rests five seconds after each round, and runs a title-letter color wave every fifteen seconds. Reduced motion, a hidden tab, or scrolling away suspends the attract lights.

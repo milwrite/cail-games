@@ -2,50 +2,74 @@
   {
     "game": "cadavre",
     "view": 1,
-    "caption": "Set the table",
-    "alt": "Cadavre Exquis table setup with DeepSeek V4 Flash, word limits, and player seating.",
+    "caption": "Shared table",
+    "alt": "Cadavre Exquis shared-table setup with the current table options and quiet wine-red navigation.",
     "source": "https://cadavre.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:55:36.210Z"
+    "capturedAt": "2026-10-17T05:09:05.553Z"
   },
   {
     "game": "cadavre",
     "view": 2,
-    "caption": "The open sheet",
-    "alt": "Cadavre Exquis solo poem with the simplified Poem menu, model selection, and writing options.",
+    "caption": "Poem menu",
+    "alt": "Cadavre Exquis with its simplified Poem menu, grouped writing options, and quiet wine-red navigation.",
     "source": "https://cadavre.ailab-452.workers.dev/play/",
-    "capturedAt": "2026-10-17T04:56:03.867Z"
+    "capturedAt": "2026-10-17T05:10:40.128Z"
   },
   {
     "game": "cadavre",
     "view": 3,
-    "caption": "Reveal and read",
-    "alt": "Cadavre Exquis finished poem, copper moon / cooled by rain, alongside a model-generated close reading.",
+    "caption": "Finished poem",
+    "alt": "Cadavre Exquis with a completed poem and its generated close reading, using the current quiet navigation.",
     "source": "https://cadavre.ailab-452.workers.dev/play/",
-    "capturedAt": "2026-10-17T04:56:42.763Z"
+    "capturedAt": "2026-10-17T05:11:12.447Z"
+  },
+  {
+    "game": "cli-adventures",
+    "view": 1,
+    "caption": "Terminal challenges",
+    "alt": "CLI Adventures running on its Cloudflare Worker, with a simulated terminal, an introductory command challenge, and the shared Games and CUNY Login buttons.",
+    "source": "https://cli-adventures.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T05:11:12.798Z"
+  },
+  {
+    "game": "cli-adventures",
+    "view": 2,
+    "caption": "Mission briefing",
+    "alt": "CLI Adventures terminal showing the treasure-hunt mission after completing the introductory navigation and reading challenges.",
+    "source": "https://cli-adventures.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T05:09:51.824Z"
+  },
+  {
+    "game": "cli-adventures",
+    "view": 3,
+    "caption": "Mission accomplished",
+    "alt": "CLI Adventures showing the successful return of treasure.json to archive/relics after practicing navigation, extraction, directory creation, and moving files.",
+    "source": "https://cli-adventures.ailab-452.workers.dev/",
+    "capturedAt": "2026-10-17T05:10:07.434Z"
   },
   {
     "game": "cloze",
     "view": 1,
-    "caption": "Read the passage",
-    "alt": "Cloze Reader passage with one missing word, its book attribution, and reading context.",
+    "caption": "Reading",
+    "alt": "Cloze Reader passage with one missing word, spacious reading typography, and quiet wine-red Games and account buttons.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:55:36.177Z"
+    "capturedAt": "2026-10-17T05:10:17.202Z"
   },
   {
     "game": "cloze",
     "view": 2,
     "caption": "Contextual hints",
-    "alt": "Cloze Reader showing contextual hints beneath the passage.",
+    "alt": "Cloze Reader with contextual hints expanded beneath the passage.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:56:03.163Z"
+    "capturedAt": "2026-10-17T05:10:26.764Z"
   },
   {
     "game": "cloze",
     "view": 3,
-    "caption": "Ask about a word",
-    "alt": "Cloze Reader word-help dialog with a saved part-of-speech hint and follow-up questions.",
+    "caption": "Word help",
+    "alt": "Cloze Reader word-help panel with a saved grammatical hint beside the reading passage.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:56:25.829Z"
+    "capturedAt": "2026-10-17T05:10:27.126Z"
   },
   {
     "game": "haggle",
@@ -74,26 +98,26 @@
   {
     "game": "jeopardy",
     "view": 1,
-    "caption": "The board",
-    "alt": "JeopardyLM board with six generated categories and thirty playable clues.",
+    "caption": "Quiz board",
+    "alt": "JeopardyLM with six generated categories and quiet wine-red Games and account navigation.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:58:00.160Z"
+    "capturedAt": "2026-10-17T05:11:28.481Z"
   },
   {
     "game": "jeopardy",
     "view": 2,
-    "caption": "Play a clue",
-    "alt": "JeopardyLM displaying a four-hundred-dollar astronomy clue and its reveal control.",
+    "caption": "Playing a clue",
+    "alt": "JeopardyLM displaying a generated astronomy clue with scoring controls.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:57:33.087Z"
+    "capturedAt": "2026-10-17T05:11:28.784Z"
   },
   {
     "game": "jeopardy",
     "view": 3,
-    "caption": "Create a board",
-    "alt": "JeopardyLM board creation dialog with DeepSeek V4 Flash selected and six optional category topics.",
+    "caption": "Board generation",
+    "alt": "JeopardyLM board-generation settings with DeepSeek V4 Flash selected and source material options.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:57:58.188Z"
+    "capturedAt": "2026-10-17T05:11:58.164Z"
   },
   {
     "game": "langames",

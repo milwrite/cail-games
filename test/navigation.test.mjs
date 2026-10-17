@@ -22,27 +22,31 @@ test('health reports an isolated game outage and still checks the other games', 
   env.CADAVRE = {fetch:async () => Response.json({ok:true,release:'poem'})};
   env.JEOPARDY = {fetch:async () => {throw new Error('offline');}};
   env.CLOZE = {fetch:async () => Response.json({ok:true,release:'reading'})};
+  env.CLI_ADVENTURES = {fetch:async () => Response.json({ok:true,release:'terminal'})};
   const response = await worker.fetch(request('/health'), env);
   const data = await response.json();
   assert.equal(response.status, 503);
   assert.equal(data.ok, false);
   assert.deepEqual(data.games.cloze, {ok:true,release:'reading'});
+  assert.deepEqual(data.games['cli-adventures'], {ok:true,release:'terminal'});
   assert.deepEqual(data.games.jeopardy, {ok:false,release:null});
 });
 
-test('game pages render first and Play launches all five verified destinations', async () => {
+test('game pages render first and Play launches all six verified destinations', async () => {
   const served = [];
   const env = {ASSETS:{fetch:async req => {served.push(new URL(req.url).pathname);return new Response('Project page');}}};
-  for (const id of ['cadavre','jeopardy','cloze','haggle','langames']) {
+  for (const id of ['cadavre','jeopardy','cloze','haggle','langames','cli-adventures']) {
     const detail = await worker.fetch(request('/'+id+'/'), env);
     assert.equal(detail.status,200);
     assert.equal(detail.headers.get('location'),null);
   }
-  assert.equal(served.length,5);
+  assert.equal(served.length,6);
   const haggle = await worker.fetch(request('/play/haggle/'), env);
   assert.equal(haggle.headers.get('location'),'https://zweibel.net/haggle/');
   const languages = await worker.fetch(request('/play/langames/?id=lesson'), env);
   assert.equal(languages.headers.get('location'),'https://stefanomorello.com/langames/?id=lesson');
+  const terminal = await worker.fetch(request('/play/cli-adventures/?lesson=files'), env);
+  assert.equal(terminal.headers.get('location'),'https://cli-adventures.ailab-452.workers.dev/?lesson=files');
 });
 
 test('the old worker preserves page paths and saved-work queries on the canonical domain', async () => {

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../public/previews/', import.meta.url));
 const manifestPath = root + 'captures.json';
-const gameIds = new Set(['cadavre','jeopardy','cloze','haggle','langames']);
+const gameIds = new Set(['cadavre','jeopardy','cloze','haggle','langames','cli-adventures']);
 
 // Run from the connected browser session after preparing a real game view.
 // Screenshots are saved unchanged; source URLs omit account and saved-work IDs.

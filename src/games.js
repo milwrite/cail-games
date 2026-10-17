@@ -1,4 +1,4 @@
-// Project descriptions supplied by the author, updated for the hosted model default.
+// Project descriptions supplied by the authors or checked against the linked source.
 export const games = [
   {
     id:'cadavre', title:'Cadavre Exquis', author:'Zach Muhlbauer',
@@ -54,5 +54,17 @@ export const games = [
       'Users can share generated content via a short link that requires no API key, so teachers can generate content and share it with their students. The frontend is built in HTML5, CSS3, and vanilla JavaScript, storing settings and generated content in the browser’s localStorage.',
     ],
     credit:'Based on Beatrice Carnelutti’s Impariamo l’Italiano.',
+  },
+  {
+    id:'cli-adventures', title:'CLI Adventures', author:'Zach Muhlbauer',
+    github:'https://github.com/zmuhls/cli-adventures',
+    play:'https://cli-adventures.ailab-452.workers.dev/', accent:'blue',
+    teaser:'Learn terminal commands through a filesystem treasure hunt',
+    paragraphs:[
+      'CLI Adventures teaches command-line basics through a sequence of interactive challenges in a simulated terminal. Players explore a virtual filesystem, read clues, extract an archive, and return a stolen treasure to its rightful directory.',
+      'The challenges introduce commands such as ls, cd, cat, pwd, mkdir, and mv. A current objective, contextual hints, command reference, and command history help players connect each instruction to its effect on files and folders.',
+      'The terminal and filesystem run in JavaScript in the browser. Players can experiment with creating, copying, moving, and deleting game files. This game uses fixed rules and written challenges; no language model or API key is required.',
+    ],
+    note:'Progress lasts for the current tab and resets when the page reloads.',
   },
 ];

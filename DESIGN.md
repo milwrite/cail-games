@@ -3,8 +3,8 @@
 The October 17 revision sets the production design:
 
 - Charcoal background with a fine 24px grid, larger 120px cross grid, and small cross marks
-- Five equal minimal cards, each with a single full-card link
-- Cyan, violet, pink, amber, and lime light hues appear only on interaction, with visible keyboard focus
+- Six equal minimal cards, each with a single full-card link
+- Cyan, violet, pink, amber, lime, and blue light hues appear on interaction and brief, slow attract lights, with visible keyboard focus
 - White CAIL logo and restrained Games wordmark
 - Lowercase inference arcade title and direct game descriptions
 - A quiet CUNY Login in the top right
@@ -23,6 +23,8 @@ IBM Plex Mono and IBM Plex Sans are reused from the existing Inference Arcade's 
 
 The grid and control effects are native CSS, as the user requested. They are not generated imagery or simulated gameplay.
 
-Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login uses a compact version of the card border and corner details. The footer reads “Critical play with, through, and against AI”.
+Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login shares the hosted games’ transparent wine-red outline, Barlow text, 2px corners, and 46px touch target. The footer reads “Critical play with, through, and against AI”.
 
-Each project page includes three unchanged screenshots captured from the live game. Sources, capture times, and sample-lesson attribution are recorded in `public/previews/captures.json`. The gallery rotates every six seconds while visible, provides pause and manual navigation, and starts paused for reduced-motion preferences. Keyboard focus, hovering, and page visibility also suspend rotation. Full-size images are available by following each preview.
+Each project page includes three unchanged screenshots captured from the live game. Sources, capture times, and sample-lesson attribution are recorded in `public/previews/captures.json`. The gallery rotates every six seconds while visible, provides Previous and Next labels with a Pause/Continue control and no visible slide counts or captions, and starts paused for reduced-motion preferences. Keyboard focus, hovering, and page visibility also suspend rotation. Full-size images are available by following each preview.
+
+The six cards flash in a freshly shuffled order: 250ms pulses with three seconds between starts and five seconds of darkness after the last pulse. Every fifteen seconds, a short wave expands and contracts each title letter in card-color order. These effects stop for reduced motion, hidden tabs, or an offscreen game grid.
