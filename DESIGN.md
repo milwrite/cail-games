@@ -23,7 +23,7 @@ IBM Plex Mono and IBM Plex Sans are reused from the existing Inference Arcade's 
 
 The grid and control effects are native CSS, as the user requested. They are not generated imagery or simulated gameplay.
 
-Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login shares the hosted games’ transparent wine-red outline, Barlow text, 2px corners, and 46px touch target. The footer reads “Critical play with, through, and against AI”.
+Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login shares the hosted games’ transparent wine-red outline, Barlow text, 2px corners, and 46px desktop / 44px phone touch targets. The footer reads “Critical play with, through, and against AI”.
 
 Each project page includes three unchanged screenshots captured from the live game. Sources, capture times, and sample-lesson attribution are recorded in `public/previews/captures.json`. The gallery rotates every six seconds while visible, provides Previous and Next labels with a Pause/Continue control and no visible slide counts or captions, and starts paused for reduced-motion preferences. Keyboard focus, hovering, and page visibility also suspend rotation. Full-size images are available by following each preview.
 
