@@ -1,23 +1,17 @@
-# Local design specification
+# Arcade design specification
 
-The user's September 12 revision supersedes both generated concepts. Neither concept nor any generated illustration is used in the application.
+The October 17 revision sets the production design:
 
-- Black background with a fine white grid and a restrained perspective grid near the bottom
-- White text and controls; one shared orange–pink–violet–cyan gradient is the third colour
-- The real white CAIL logo, with “Games” beside it
-- Lowercase title: “inference arcade”
-- Exactly two full sentences in the introductory description
-- No periods in headings, game teasers, navigation, labels, buttons, or status text
-- Three equally sized game entries; no default selection or pre-highlighted entry
-- Gradient edges appear on actual hover or keyboard focus
-- Square buttons with a small physical offset on hover and press
-- Short game descriptions, direct Play links, and details on demand
-- Mobile controls at least 44px and form inputs at least 16px; opening the form does not focus an input
-- Reduced motion supported; no continuous flashing, audio, canvas, or background model calls
+- Charcoal background with a fine 24px grid, larger 120px cross grid, and small cross marks
+- Three equal minimal cards, each with a single full-card link
+- Cyan, violet, and pink light hues appear only on interaction, with visible keyboard focus
+- White CAIL logo and restrained Games wordmark
+- Lowercase inference arcade title, short introductory copy, and direct game descriptions
+- A quiet CUNY Login in the top right
+- Responsive single-column cards on phones; touch targets at least 44px
+- No browser scripts, animated backgrounds, model calls, or contribution form
 
-## Copy
-
-CAIL Games is a CUNY AI Lab publication of web games that explore AI through thoughtful, speculative game design. Play the collection and consider how each game uses AI to support learning.
+The site links the current deployed games through a common Worker. Each application includes a Games link back, with its existing save guard.
 
 ## Assets and provenance
 

@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#000000">
-  <meta name="description" content="CAIL Games is a CUNY AI Lab publication of web games that explore AI through thoughtful, speculative game design.">
+  <meta name="theme-color" content="#1c1e20">
+  <meta name="description" content="Play Exquisite Corpse, Jeopardy, and Cloze Reader at the CUNY AI Lab.">
   <title>inference arcade — CAIL Games</title>
   <link rel="icon" href="/assets/cail-logo-white.png" type="image/png">
-  <link rel="preload" href="/assets/fonts/ibm-plex-mono-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/src/styles.css">
-  <script type="module" src="/src/app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#collection">Skip to games</a>
@@ -20,110 +19,32 @@
         <img src="/assets/cail-logo-white.png" width="1154" height="259" alt="CUNY AI Lab">
         <span>Games</span>
       </a>
-      <nav aria-label="Main navigation">
-        <button class="text-button" data-open="about-dialog">About</button>
-        <button class="button button-outline" data-open="contribute-dialog">Contribute <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
-      </nav>
+      <nav aria-label="CUNY account"><a href="/my-work/">CUNY Login</a></nav>
     </header>
-
     <main>
       <section class="intro" aria-labelledby="arcade-title">
         <h1 id="arcade-title">inference arcade</h1>
-        <div class="spectrum" aria-hidden="true"></div>
-        <p>CAIL Games is a CUNY AI Lab publication of web games that explore AI through thoughtful, speculative game design. Play the collection and consider how each game uses AI to support learning.</p>
+        <p>Three games from the CUNY AI Lab. Write together, question what you know, and read between the words.</p>
       </section>
-
       <section id="collection" class="collection" aria-label="Game collection">
-        <article class="game" aria-labelledby="corpse-title">
-          <div class="game-copy">
-            <h2 id="corpse-title">Exquisite <br>Corpse</h2>
-            <p>A poem written one turn at a time</p>
-          </div>
-          <div class="game-actions">
-            <a class="button play-button" href="https://cadavre.ailab-452.workers.dev/" aria-label="Play Exquisite Corpse">Play <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></a>
-            <button class="text-button" data-game="corpse" aria-label="About Exquisite Corpse">About the game</button>
-          </div>
-        </article>
-        <article class="game" aria-labelledby="jeopardy-title">
-          <div class="game-copy">
-            <h2 id="jeopardy-title">Jeopardy</h2>
-            <p>Make a board and question what you know</p>
-          </div>
-          <div class="game-actions">
-            <a class="button play-button" href="https://jeopardy.ailab-452.workers.dev/" aria-label="Play Jeopardy">Play <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></a>
-            <button class="text-button" data-game="jeopardy" aria-label="About Jeopardy">About the game</button>
-          </div>
-        </article>
-        <article class="game" aria-labelledby="cloze-title">
-          <div class="game-copy">
-            <h2 id="cloze-title">Cloze <br>Reader</h2>
-            <p>Read closely and find the missing words</p>
-          </div>
-          <div class="game-actions">
-            <a class="button play-button" href="https://cloze.ailab-452.workers.dev/" aria-label="Play Cloze Reader">Play <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></a>
-            <button class="text-button" data-game="cloze" aria-label="About Cloze Reader">About the game</button>
-          </div>
-        </article>
+        <a class="game game-corpse" href="/cadavre/" aria-labelledby="corpse-title" aria-describedby="corpse-description">
+          <h2 id="corpse-title">Exquisite Corpse</h2>
+          <p id="corpse-description">Write a poem one turn at a time with a language model</p>
+          <span class="game-action">Play <span class="arrow" aria-hidden="true">↗</span></span>
+        </a>
+        <a class="game game-jeopardy" href="/jeopardy/" aria-labelledby="jeopardy-title" aria-describedby="jeopardy-description">
+          <h2 id="jeopardy-title">Jeopardy</h2>
+          <p id="jeopardy-description">Make a quiz board and question what you know</p>
+          <span class="game-action">Play <span class="arrow" aria-hidden="true">↗</span></span>
+        </a>
+        <a class="game game-cloze" href="/cloze/" aria-labelledby="cloze-title" aria-describedby="cloze-description">
+          <h2 id="cloze-title">Cloze Reader</h2>
+          <p id="cloze-description">Read closely and find the missing words</p>
+          <span class="game-action">Play <span class="arrow" aria-hidden="true">↗</span></span>
+        </a>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <a href="https://ailab.gc.cuny.edu/">CUNY AI Lab <svg class="icon" aria-hidden="true"><use href="#external"/></svg></a>
-      <button class="text-button" data-open="contribute-dialog">Make something playable <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
-    </footer>
+    <footer class="site-footer"><a href="https://ailab.gc.cuny.edu/">CUNY AI Lab</a><span>A place to play with AI</span></footer>
   </div>
-
-  <dialog id="about-dialog" aria-labelledby="about-title">
-    <div class="dialog-content">
-      <button class="close-button" data-close aria-label="Close about"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
-      <h2 id="about-title">CAIL Games</h2>
-      <p>A small publication for games that make AI part of the experience of learning. We are starting with the games already made at the CUNY AI Lab and developing a path for student contributions.</p>
-      <p>A game can begin with a system prompt, a rule, or a question. The interesting part is what happens when someone plays it.</p>
-      <a class="button button-outline" href="https://ailab.gc.cuny.edu/events/">Lab workshops <svg class="icon" aria-hidden="true"><use href="#external"/></svg></a>
-    </div>
-  </dialog>
-
-  <dialog id="game-dialog" aria-labelledby="game-dialog-title">
-    <div class="dialog-content">
-      <button class="close-button" data-close aria-label="Close game details"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
-      <h2 id="game-dialog-title"></h2>
-      <p id="game-description"></p>
-      <h3>While you play</h3>
-      <p id="game-notice"></p>
-      <div class="dialog-actions">
-        <a class="button" id="game-play" href="#collection">Play <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></a>
-        <a class="text-button" id="solo-play" href="https://cadavre.ailab-452.workers.dev/play/" hidden>Play solo</a>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="contribute-dialog" class="contribute-dialog" aria-labelledby="contribute-title">
-    <div class="dialog-content">
-      <button class="close-button" data-close aria-label="Close contribution draft"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
-      <h2 id="contribute-title">Bring a game</h2>
-      <p>Tell us what it does, how it uses AI for learning, and what players should look out for. Aim for a 250-word project summary.</p>
-      <p class="draft-note">This local preview saves a draft on this device. CUNY Login and submission to the editors will be added when contributions open.</p>
-      <form id="contribution-form">
-        <div class="form-row">
-          <label>Your name<input name="name" autocomplete="name" maxlength="120" required></label>
-          <label>Game title<input name="title" autocomplete="off" maxlength="120" required></label>
-        </div>
-        <label>Project link<input name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://" required></label>
-        <label for="project-summary">Project summary <span id="word-count">0 / 250 words</span></label>
-        <textarea id="project-summary" name="summary" rows="6" maxlength="12000" aria-describedby="word-count" required></textarea>
-        <div class="form-actions">
-          <button class="button" type="submit">Save draft <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
-          <button class="text-button" id="download-draft" type="button">Download draft</button>
-        </div>
-        <p id="draft-status" role="status" aria-live="polite"></p>
-      </form>
-    </div>
-  </dialog>
-
-  <svg class="symbol-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"/></symbol>
-    <symbol id="external" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
-    <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
-  </svg>
 </body>
 </html>

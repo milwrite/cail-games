@@ -1,15 +1,23 @@
 # CAIL Games — inference arcade
 
-Local prototype for a small CUNY AI Lab games publication. Three direct links open the existing Exquisite Corpse, Jeopardy, and Cloze Reader Workers. The hub itself makes no model calls.
+Shared entry point for Exquisite Corpse, Jeopardy, and Cloze Reader:
+https://cail-games.ailab-452.workers.dev/
 
+The charcoal grid holds three minimal cards. Cyan, violet, and pink accents appear on hover, focus, or press. Fonts and the CUNY AI Lab logo are served locally. The page has no browser scripts.
+
+The common Worker serves the arcade and resolves `/cadavre/`, `/jeopardy/`, and `/cloze/` to the current application origins. It preserves deep paths and saved-work query strings. Each game has a Games link back to this arcade; navigating away waits for pending account saves. CUNY Login opens the existing Lab workspace.
+
+The applications retain their current identity, inference secrets, and persistent records. No game bundle or data is copied into this hub. Service bindings connect all three games for `/health`, which reports each serving release and returns 503 if a game is unavailable.
+
+```sh
+npm install
+npm run check
+npm test
+npm run build
+npx wrangler deploy --dry-run
+npx wrangler deploy --var RELEASE:$(git rev-parse --short HEAD)
 ```
-npm run dev
-```
 
-Open http://127.0.0.1:4173. No package installation is needed. `npm run build` creates a static `dist/` directory; `npm run preview` serves that build locally. The included Wrangler configuration describes a possible static Worker, but this prototype has not been published to Cloudflare.
+`npm run dev` previews the static design at http://127.0.0.1:4173. Use Wrangler for the Worker launch and health routes. The earlier contribution draft modules remain in source for reference; the published build includes only the active HTML, CSS, and assets.
 
-The contribution form validates a name, title, HTTP(S) link, and summary of up to 250 words. Save draft stores the draft in this browser; Download draft creates a text file. The form does not submit to anyone or pretend to authenticate. Production CUNY Login, editorial submission, and review require the service integration described in the Games plan.
-
-See `DESIGN.md` for the user's final visual specification and asset provenance. `docs/GAMES-PLAN.md` is the accompanying publication and development plan.
-
-The implementation uses HTML, CSS, native dialogs, and small JavaScript modules. Local preview data stays in this browser, and there are no remote fonts, analytics, generated images, or runtime dependencies.
+See `DESIGN.md` for the design and asset provenance. The earlier Games plan in `docs/` is historical planning, not a statement of current deployment status.

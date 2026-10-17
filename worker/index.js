@@ -1,0 +1,41 @@
+// The suite owns navigation; each game keeps its verified identity and save boundary.
+const origins = Object.freeze({
+  cadavre: 'https://cadavre.ailab-452.workers.dev',
+  jeopardy: 'https://jeopardy.ailab-452.workers.dev',
+  cloze: 'https://cloze.ailab-452.workers.dev',
+});
+const privateHeaders = { 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' };
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', {status:405, headers:{...privateHeaders,allow:'GET, HEAD'}});
+    if (url.pathname === '/health') {
+      const checks = await Promise.all(Object.keys(origins).map(async app => {
+        try {
+          const response = await env[app.toUpperCase()].fetch(new Request(origins[app] + '/health', {signal:AbortSignal.timeout(5000)}));
+          const data = await response.json();
+          return [app, {ok:response.ok && data.ok === true, release:data.release || null}];
+        } catch { return [app, {ok:false,release:null}]; }
+      }));
+      const games = Object.fromEntries(checks);
+      const ok = checks.every(([, game]) => game.ok);
+      return Response.json({ok,release:env.RELEASE,games}, {status:ok ? 200 : 503,headers:privateHeaders});
+    }
+    const match = url.pathname.match(/^\/(cadavre|jeopardy|cloze)(\/.*)?$/);
+    if (match) {
+      const target = new URL(origins[match[1]]);
+      target.pathname = match[2] || '/';
+      target.search = url.search;
+      return new Response(null, {status:302,headers:{...privateHeaders,location:target.href}});
+    }
+    if (['/auth/start', '/my-work', '/my-work/'].includes(url.pathname)) {
+      return new Response(null, {status:302,headers:{...privateHeaders,location:'https://tools.ailab.gc.cuny.edu/my-work/'}});
+    }
+    const response = await env.ASSETS.fetch(request);
+    const headers = new Headers(response.headers);
+    headers.set('x-content-type-options','nosniff');
+    headers.set('referrer-policy','strict-origin-when-cross-origin');
+    headers.set('content-security-policy',"default-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; script-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+    return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
+  },
+};
