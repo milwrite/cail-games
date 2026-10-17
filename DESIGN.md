@@ -25,6 +25,10 @@ The grid and control effects are native CSS, as the user requested. They are not
 
 Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login shares the hosted games’ transparent wine-red outline, Barlow text, 2px corners, and 46px desktop / 44px phone touch targets. The footer reads “Critical play with, through, and against AI”.
 
+The shared control rules in `public/assets/suite-navigation.css` also style Play and Pause/Continue through `.suite-control`. One set of size, padding, radius, and focus tokens keeps these controls aligned; only navigation uses wine red. Gallery controls have transparent backgrounds and a fixed minimum width to prevent movement when their label changes. A shared page gutter aligns the header, content, and footer; tablet cards use two columns and project text stacks before its columns become cramped.
+
 Each project page includes three unchanged screenshots captured from the live game. Sources, capture times, and sample-lesson attribution are recorded in `public/previews/captures.json`. The gallery rotates every six seconds while visible, provides only a Pause/Continue control and no visible slide counts or captions, and starts paused for reduced-motion preferences. Keyboard focus, hovering, and page visibility also suspend rotation. Full-size images are available by following each preview.
+
+The running gallery prepares only its next image, and waits for decoding before revealing it. Slow or unavailable images leave the current screenshot in place; pausing or leaving the gallery cancels a pending transition. This avoids empty frames without loading every hidden image on page entry.
 
 The six cards flash in a freshly shuffled order: 250ms pulses with three seconds between starts and five seconds of darkness after the last pulse. Every fifteen seconds, a short wave expands and contracts each title letter in card-color order. These effects stop for reduced motion, hidden tabs, or an offscreen game grid.

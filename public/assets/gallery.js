@@ -3,20 +3,44 @@ for (const gallery of document.querySelectorAll('[data-gallery]')) {
   const slides = [...gallery.querySelectorAll('[data-slide]')];
   const controls = gallery.querySelector('[data-controls]');
   const rotation = gallery.querySelector('[data-rotation]');
+  const images = slides.map(slide => slide.querySelector('img'));
+  const prepared = new Map();
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0, timer, visible = false, hovered = false, focused = false;
-  let paused = motion.matches, explicitContinue = false;
+  let paused = motion.matches, explicitContinue = false, revision = 0;
 
+  function canRotate() {
+    return !paused && (explicitContinue || (!hovered && !focused)) && visible && !document.hidden;
+  }
+  function prepare(next) {
+    if (!prepared.has(next)) {
+      // Only prepare the next view once the gallery is visible and running.
+      images[next].loading = 'eager';
+      prepared.set(next, images[next].decode().then(() => true, () => false));
+    }
+    return prepared.get(next);
+  }
   function schedule() {
     clearTimeout(timer);
-    if (!paused && (explicitContinue || (!hovered && !focused)) && visible && !document.hidden) {
-      timer = setTimeout(() => show(index + 1), 6000);
-    }
-  }
-  function show(next) {
-    index = (next + slides.length) % slides.length;
-    slides.forEach((slide, i) => { slide.hidden = i !== index; });
-    schedule();
+    const scheduledRevision = ++revision;
+    if (!canRotate()) return;
+    const next = (index + 1) % slides.length;
+    const ready = prepare(next);
+    timer = setTimeout(async () => {
+      const loaded = await ready;
+      // A late image must not override Pause, reduced motion, or leaving the page.
+      if (scheduledRevision !== revision || !canRotate()) return;
+      if (!loaded) {
+        prepared.delete(next);
+        paused = true;
+        explicitContinue = false;
+        updateRotation();
+        return;
+      }
+      index = next;
+      slides.forEach((slide, i) => { slide.hidden = i !== index; });
+      schedule();
+    }, 6000);
   }
   function updateRotation() {
     rotation.textContent = paused ? 'Continue' : 'Pause';
