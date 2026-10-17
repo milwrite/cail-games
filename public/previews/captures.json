@@ -5,7 +5,7 @@
     "caption": "Set the table",
     "alt": "Cadavre Exquis table setup with DeepSeek V4 Flash, word limits, and player seating.",
     "source": "https://cadavre.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:40:40.122Z"
+    "capturedAt": "2026-10-17T04:55:36.210Z"
   },
   {
     "game": "cadavre",
@@ -13,7 +13,7 @@
     "caption": "The open sheet",
     "alt": "Cadavre Exquis solo poem with the simplified Poem menu, model selection, and writing options.",
     "source": "https://cadavre.ailab-452.workers.dev/play/",
-    "capturedAt": "2026-10-17T04:43:26.481Z"
+    "capturedAt": "2026-10-17T04:56:03.867Z"
   },
   {
     "game": "cadavre",
@@ -21,7 +21,7 @@
     "caption": "Reveal and read",
     "alt": "Cadavre Exquis finished poem, copper moon / cooled by rain, alongside a model-generated close reading.",
     "source": "https://cadavre.ailab-452.workers.dev/play/",
-    "capturedAt": "2026-10-17T04:44:08.592Z"
+    "capturedAt": "2026-10-17T04:56:42.763Z"
   },
   {
     "game": "cloze",
@@ -29,7 +29,7 @@
     "caption": "Read the passage",
     "alt": "Cloze Reader passage with one missing word, its book attribution, and reading context.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:39:21.614Z"
+    "capturedAt": "2026-10-17T04:55:36.177Z"
   },
   {
     "game": "cloze",
@@ -37,15 +37,15 @@
     "caption": "Contextual hints",
     "alt": "Cloze Reader showing contextual hints beneath the passage.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:39:21.904Z"
+    "capturedAt": "2026-10-17T04:56:03.163Z"
   },
   {
     "game": "cloze",
     "view": 3,
     "caption": "Ask about a word",
-    "alt": "Cloze Reader word-help dialog with a generated part-of-speech hint and follow-up questions.",
+    "alt": "Cloze Reader word-help dialog with a saved part-of-speech hint and follow-up questions.",
     "source": "https://cloze.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:39:45.088Z"
+    "capturedAt": "2026-10-17T04:56:25.829Z"
   },
   {
     "game": "haggle",
@@ -77,15 +77,15 @@
     "caption": "The board",
     "alt": "JeopardyLM board with six generated categories and thirty playable clues.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:40:40.145Z"
+    "capturedAt": "2026-10-17T04:58:00.160Z"
   },
   {
     "game": "jeopardy",
     "view": 2,
     "caption": "Play a clue",
-    "alt": "JeopardyLM displaying a two-hundred-dollar astronomy clue and its reveal control.",
+    "alt": "JeopardyLM displaying a four-hundred-dollar astronomy clue and its reveal control.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:40:50.882Z"
+    "capturedAt": "2026-10-17T04:57:33.087Z"
   },
   {
     "game": "jeopardy",
@@ -93,7 +93,7 @@
     "caption": "Create a board",
     "alt": "JeopardyLM board creation dialog with DeepSeek V4 Flash selected and six optional category topics.",
     "source": "https://jeopardy.ailab-452.workers.dev/",
-    "capturedAt": "2026-10-17T04:41:28.603Z"
+    "capturedAt": "2026-10-17T04:57:58.188Z"
   },
   {
     "game": "langames",
