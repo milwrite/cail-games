@@ -5,7 +5,7 @@ https://games.ailab-452.workers.dev/
 
 The charcoal grid holds five minimal cards. Discrete neon accents appear on hover, focus, or press. Fonts and the CUNY AI Lab logo are served locally. The home page has no browser scripts.
 
-Each card opens an individual project page with its author, GitHub link, description, Play link, and three-view screenshot gallery. Previews rotate every six seconds while visible, stop on hover or keyboard focus, and provide previous, next, and pause controls. Reduced-motion preferences disable automatic rotation. The common Worker resolves `/play/:game/` to the verified application origin. It preserves deep paths and saved-work query strings. The three integrated games have Games links back to this arcade; navigating away waits for pending account saves. CUNY Login opens the existing Lab workspace.
+Each card opens an individual project page with its author, GitHub link, description, Play link, and three-view screenshot gallery. Previews rotate every six seconds while visible, stop on hover or keyboard focus, and provide a single Pause/Continue control. Reduced-motion preferences disable automatic rotation. The common Worker resolves `/play/:game/` to the verified application origin. It preserves deep paths and saved-work query strings. The three integrated games have Games links back to this arcade; navigating away waits for pending account saves. CUNY Login opens the existing Lab workspace.
 
 The applications retain their current identity, inference secrets, and persistent records. No game bundle or data is copied into this hub. Service bindings connect all three games for `/health`, which reports each serving release and returns 503 if a game is unavailable.
 
