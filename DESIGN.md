@@ -3,7 +3,7 @@
 The October 17 revision sets the production design:
 
 - Charcoal background with a fine 24px grid, larger 120px cross grid, and small cross marks
-- Three equal minimal cards, each with a single full-card link
+- Five equal minimal cards, each with a single full-card link
 - Cyan, violet, and pink light hues appear only on interaction, with visible keyboard focus
 - White CAIL logo and restrained Games wordmark
 - Lowercase inference arcade title, short introductory copy, and direct game descriptions
@@ -22,3 +22,5 @@ Size: 10,337 bytes. SHA-256: `4d868d8174b9ef63d1e436f8e1f6f02a63bab56539c2de5f9b
 IBM Plex Mono and IBM Plex Sans are reused from the existing Inference Arcade's local web assets. They are SIL Open Font License fonts from https://github.com/IBM/plex. Font licenses are in `public/assets/fonts/OFL.txt`.
 
 The grid and control effects are native CSS, as the user requested. They are not generated imagery or simulated gameplay.
+
+Project pages use a two-column identity and description layout, stacked on phones. Barlow and Barlow Condensed match the hosted games. CUNY Login uses a compact version of the card border and corner details. The footer reads “Critical play with artificial intelligence”.

@@ -1,4 +1,5 @@
-// The suite owns navigation; each game keeps its verified identity and save boundary.
+import { games } from '../src/games.js';
+// Project pages precede launch; each game keeps its identity and save boundary.
 const origins = Object.freeze({
   cadavre: 'https://cadavre.ailab-452.workers.dev',
   jeopardy: 'https://jeopardy.ailab-452.workers.dev',
@@ -8,6 +9,11 @@ const privateHeaders = { 'cache-control': 'no-store', 'x-content-type-options': 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (env.LEGACY_REDIRECT === 'true') {
+      const target = new URL('https://games.ailab-452.workers.dev');
+      target.pathname = url.pathname; target.search = url.search;
+      return new Response(null,{status:308,headers:{...privateHeaders,location:target.href}});
+    }
     if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', {status:405, headers:{...privateHeaders,allow:'GET, HEAD'}});
     if (url.pathname === '/health') {
       const checks = await Promise.all(Object.keys(origins).map(async app => {
@@ -21,10 +27,14 @@ export default {
       const ok = checks.every(([, game]) => game.ok);
       return Response.json({ok,release:env.RELEASE,games}, {status:ok ? 200 : 503,headers:privateHeaders});
     }
+    const launch = url.pathname.match(/^\/play\/([a-z]+)\/?$/);
     const match = url.pathname.match(/^\/(cadavre|jeopardy|cloze)(\/.*)?$/);
-    if (match) {
-      const target = new URL(origins[match[1]]);
-      target.pathname = match[2] || '/';
+    const game = launch && games.find(game => game.id === launch[1]);
+    // Preserve older deep links and saved-work launch URLs; base routes are project pages.
+    const oldLaunch = match && ((match[2] && match[2] !== '/') || url.searchParams.has('work'));
+    if (game || oldLaunch) {
+      const target = new URL(game ? game.play : origins[match[1]]);
+      if (!game) target.pathname = match[2] || '/';
       target.search = url.search;
       return new Response(null, {status:302,headers:{...privateHeaders,location:target.href}});
     }

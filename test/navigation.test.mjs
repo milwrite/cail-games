@@ -29,3 +29,24 @@ test('health reports an isolated game outage and still checks the other games', 
   assert.deepEqual(data.games.cloze, {ok:true,release:'reading'});
   assert.deepEqual(data.games.jeopardy, {ok:false,release:null});
 });
+
+test('game pages render first and Play launches all five verified destinations', async () => {
+  const served = [];
+  const env = {ASSETS:{fetch:async req => {served.push(new URL(req.url).pathname);return new Response('Project page');}}};
+  for (const id of ['cadavre','jeopardy','cloze','haggle','langames']) {
+    const detail = await worker.fetch(request('/'+id+'/'), env);
+    assert.equal(detail.status,200);
+    assert.equal(detail.headers.get('location'),null);
+  }
+  assert.equal(served.length,5);
+  const haggle = await worker.fetch(request('/play/haggle/'), env);
+  assert.equal(haggle.headers.get('location'),'https://zweibel.net/haggle/');
+  const languages = await worker.fetch(request('/play/langames/?id=lesson'), env);
+  assert.equal(languages.headers.get('location'),'https://stefanomorello.com/langames/?id=lesson');
+});
+
+test('the old worker preserves page paths and saved-work queries on the canonical domain', async () => {
+  const response = await worker.fetch(request('/cadavre/play/?work=saved-poem'), {LEGACY_REDIRECT:'true'});
+  assert.equal(response.status,308);
+  assert.equal(response.headers.get('location'),'https://games.ailab-452.workers.dev/cadavre/play/?work=saved-poem');
+});

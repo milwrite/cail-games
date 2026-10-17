@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "cail-games",
+  "name": "games",
   "account_id": "452c33847cf5cb1e46f391fca32fd1b5",
   "main": "worker/index.js",
   "compatibility_date": "2026-10-17",

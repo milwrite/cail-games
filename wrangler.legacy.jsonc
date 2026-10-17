@@ -1,0 +1,8 @@
+{
+  "name":"cail-games",
+  "account_id":"452c33847cf5cb1e46f391fca32fd1b5",
+  "main":"worker/index.js",
+  "compatibility_date":"2026-10-17",
+  "workers_dev":true,
+  "vars":{"LEGACY_REDIRECT":"true","RELEASE":"dev"}
+}
