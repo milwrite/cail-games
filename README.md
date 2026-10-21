@@ -3,7 +3,7 @@
 Shared entry point for Cadavre Exquis, JeopardyLM, Cloze Reader, Haggle, and LanGames:
 https://games.ailab-452.workers.dev/
 
-The charcoal grid holds five minimal cards. Discrete neon accents appear on hover, focus, or press. Fonts and the CUNY AI Lab logo are served locally. The home page has no browser scripts.
+The charcoal grid holds five minimal cards. Discrete neon accents appear on hover, focus, or press. Fonts and the CUNY AI Lab logo are served locally. The home page uses lightweight scripts for its attract lights and decorative snake.
 
 Each card opens an individual project page with its author, GitHub link, description, Play link, and three-view screenshot gallery. Previews rotate every six seconds while visible, stop on hover or keyboard focus, and provide a single Pause/Continue control. Reduced-motion preferences disable automatic rotation. The common Worker resolves `/play/:game/` to the verified application origin. It preserves deep paths and saved-work query strings. The three integrated games have Games links back to this arcade; navigating away waits for pending account saves. CUNY Login opens the existing Lab workspace.
 
@@ -42,3 +42,5 @@ await capturePreview(tab, {
 Repeat for views 1–3 of each game. The helper captures the viewport and updates the manifest automatically. Use the default desktop viewport, wait for visible loading indicators to finish, and review every captured image before rebuilding. `npm run build` requires three captures for every game and checks that their files exist. No model calls run when someone views a gallery.
 
 CLI Adventures is hosted on the Lab’s cli-adventures Worker. The sixth card has a source-checked description and three live screenshots. The homepage lights a random card for 250ms every three seconds, rests five seconds after each round, and runs a title-letter color wave every fifteen seconds. Reduced motion, a hidden tab, or scrolling away suspends the attract lights.
+
+The decorative snake visits the header, all six card margins, and footer in changing routes while avoiding text. Pause snake stops it for the current tab session. Reduced motion and forced colors disable it, and hidden tabs suspend it. It uses a native canvas with no additional dependencies; gallery content and Worker routes are unchanged.

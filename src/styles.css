@@ -86,3 +86,13 @@ h1{margin:0 0 20px;font-size:clamp(40px,5.8vw,76px);font-weight:400;line-height:
   .site-header nav{flex-shrink:0;margin-left:auto}
 }
 @media(max-width:300px){.brand span{display:none}}
+
+/* The visitor paints above card backgrounds without owning any hit targets. */
+.arcade-snake{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.intro{position:relative}
+.snake-toggle{position:absolute;right:0;bottom:4px;z-index:3;min-height:44px;min-width:112px;padding:8px 12px;border:1px solid var(--line);border-radius:2px;background:var(--charcoal);color:var(--muted);font:400 12px/1.4 var(--mono);cursor:pointer}
+.snake-toggle[hidden]{display:none}
+.snake-toggle:hover{border-color:var(--cyan);color:var(--text)}
+.snake-toggle:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.snake-toggle:disabled{cursor:default}
+@media(prefers-reduced-motion:reduce),(forced-colors:active){.arcade-snake{display:none}}
