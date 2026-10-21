@@ -1,10 +1,10 @@
 # Arcade design specification
 
-The October 17 revision sets the production design:
+The arcade uses the following design:
 
 - Charcoal background with a fine 24px grid, larger 120px cross grid, and small cross marks
 - Six equal minimal cards, each with a single full-card link
-- Cyan, violet, pink, amber, lime, and blue light hues appear on interaction and brief, slow attract lights, with visible keyboard focus
+- Cyan, violet, pink, amber, lime, and blue accents appear on interaction and glow for six seconds when the snake visits, with visible keyboard focus
 - White CAIL logo and restrained Games wordmark
 - Lowercase inference arcade title and direct game descriptions
 - A quiet CUNY Login in the top right
@@ -31,6 +31,8 @@ Each project page includes three unchanged screenshots captured from the live ga
 
 The running gallery prepares only its next image, and waits for decoding before revealing it. Slow or unavailable images leave the current screenshot in place; pausing or leaving the gallery cancels a pending transition. This avoids empty frames without loading every hidden image on page entry.
 
-The six cards flash in a freshly shuffled order: 250ms pulses with three seconds between starts and five seconds of darkness after the last pulse. Every fifteen seconds, a short wave expands and contracts each title letter in card-color order. These effects stop for reduced motion, hidden tabs, or an offscreen game grid.
+The title letters stay in their card accent colors. A broad, gentle highlight sweeps left to right and back over twelve seconds without changing glyph size or leaving the letters uncolored. Each arrival at a card waypoint triggers a six-second border and arrow glow: 600ms fading in, three seconds at full accent, and 2.4 seconds fading out. A visit during an active glow leaves its fade intact. Pause lights stops the title and card effects and remembers the choice for the tab session. Reduced motion retains static title colors, forced colors use the system text color, and hidden or offscreen elements suspend their animation. Card gaps are 48px on desktop and 40px on tablets and phones.
 
-A small pixel snake travels from the header through the six card margins to the footer and back. Each pass changes card order within rows and entry sides. A bounded grid search routes around measured text and controls; a final paint mask keeps text clear. The fixed canvas has no pointer events, uses document coordinates for scrolling, caps its pixel ratio at 1.5 and paints at most 30 times per second. Resize and font changes rebuild the paths. The home page’s Pause snake control retains its choice for the tab session. Hidden pages suspend the loop; reduced motion and forced colors hide the decoration. This control affects the snake only; the existing attract lights retain their reduced-motion and visibility behavior.
+A pixel snake travels from the header through the card grid to the footer and back. Paired waypoints carry it down and up the internal column gaps and across the gaps between rows. On phones it alternates left and right across each gap between successive cards. Entry sides vary between passes. A bounded grid search routes around measured text and controls; a final paint mask keeps text clear. The fixed canvas has no pointer events, uses document coordinates for scrolling, caps its pixel ratio at 1.5 and paints at most 30 times per second. Layout and font changes rebuild the paths. Hidden pages suspend the loop; operating-system reduced motion and forced colors hide the decoration. There is no visible snake pause control. Pause lights affects only the title and card lights.
+
+Each full header–footer–header circuit places five small, steady amber pellets on distinct safe route waypoints. The snake eats a pellet only when its head reaches it. Its tail starts at 36 segments spaced 8px apart and gains 12 segments per pellet, up to 96. Returning to the header resets the tail and replenishes the five pellets. A resize that changes the layout restarts the route safely; a viewport-only resize preserves its progress. Pellets and tail growth are decorative and add no controls or saved state.
