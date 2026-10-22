@@ -32,12 +32,13 @@ function harness({reduced = false, contrast = false, savedPause = false, storage
   const control = {...eventTarget(), hidden:true, attributes:{}, setAttribute(name, value) { this.attributes[name] = value; }};
   const collection = {}, title = {};
   const document = {...eventTarget(), hidden:false,
+    dispatchEvent(event) { this.emit(event.type, event); },
     querySelectorAll:selector => selector.includes('collection') ? cards : letters,
     querySelector:selector => ({'.collection':collection, '.arcade-title':title, '[data-lights-toggle]':control})[selector],
   };
   const window = eventTarget();
   runInNewContext(source, {
-    document, Math, addEventListener:window.addEventListener,
+    document, Math, CustomEvent:class { constructor(type, {detail}) { this.type = type; this.detail = detail; } }, addEventListener:window.addEventListener,
     matchMedia:query => query.includes('reduced') ? motion : colors,
     getComputedStyle:letter => ({getPropertyValue:() => letter.accent}),
     sessionStorage:{getItem(key) { if (storageFails) throw new Error('Unavailable'); return stored.get(key); }, setItem(key, value) { if (storageFails) throw new Error('Unavailable'); stored.set(key, value); }},

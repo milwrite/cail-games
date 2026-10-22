@@ -51,6 +51,7 @@ function sync() {
   const active = running();
   if (!active || !visible) clearGlows();
   waves.forEach(wave => active && titleVisible ? wave.play() : wave.pause());
+  if (!control) return;
   control.disabled = preference;
   control.textContent = preference ? 'Lights still' : paused ? 'Resume lights' : 'Pause lights';
   control.setAttribute('aria-label', preference ? 'Lights still: motion or contrast preference enabled' : control.textContent);
@@ -60,17 +61,20 @@ document.addEventListener('arcade:snake-visit', event => {
   if (!running() || !visible || !Number.isInteger(index) || index < 0 || index >= cards.length) return;
   glow(cards[index]);
 });
-control.addEventListener('click', () => {
+control?.addEventListener('click', () => {
   paused = !paused;
   try { sessionStorage.setItem('cail-lights-paused', String(paused)); } catch { /* Keep working without storage. */ }
+  document.dispatchEvent(new CustomEvent('arcade:motion-change', {detail:{paused}}));
   sync();
 });
-control.hidden = false;
+if (control) control.hidden = false;
 motion.addEventListener('change', sync);
 contrast.addEventListener('change', sync);
 document.addEventListener('visibilitychange', sync);
 addEventListener('pagehide', () => { departed = true; sync(); });
 addEventListener('pageshow', () => { departed = false; sync(); });
-new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, {threshold:.1}).observe(document.querySelector('.collection'));
-new IntersectionObserver(([entry]) => { titleVisible = entry.isIntersecting; sync(); }).observe(document.querySelector('.arcade-title'));
+const collection = document.querySelector('.collection');
+if (collection) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, {threshold:.1}).observe(collection);
+const title = document.querySelector('.arcade-title');
+if (title) new IntersectionObserver(([entry]) => { titleVisible = entry.isIntersecting; sync(); }).observe(title);
 sync();
