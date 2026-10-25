@@ -77,7 +77,7 @@ test('a fully blocked page safely has no snake or food', () => {
 });
 
 const adapter = (await readFile(new URL('../public/assets/snake.js', import.meta.url), 'utf8')).replace(/^import .*;\n/gm, '');
-function runtime({reduced=false,contrast=false,paused=false}={}) {
+function runtime({reduced=false,contrast=false,paused=false,width=390,documentHeight=900}={}) {
   const listeners=new Map(), pending=new Map(); let now=0,sequence=0,draws=0,measures=0,resize;
   const target=()=>({addEventListener(type,fn){listeners.set(type,fn);}});
   const context={setTransform(){},clearRect(){},fillRect(){draws++;}};
@@ -87,7 +87,7 @@ function runtime({reduced=false,contrast=false,paused=false}={}) {
   const mediaChange={};
   for(const [name,m] of Object.entries(media)) m.addEventListener=(_,fn)=>{mediaChange[name]=fn;};
   const shell={};
-  const document={...target(),hidden:false,documentElement:{...target(),clientWidth:390,scrollHeight:900},
+  const document={...target(),hidden:false,documentElement:{...target(),clientWidth:width,scrollHeight:documentHeight},
     body:{append(){}},createElement:()=>canvas,querySelector:()=>shell,querySelectorAll:()=>{measures++;return [];},
     dispatchEvent(){},fonts:{ready:{then(){}}}};
   runInNewContext(adapter,{document,makeGrid,Snake,paintSnake,GRID,innerHeight:844,scrollY:0,devicePixelRatio:3,
@@ -127,4 +127,15 @@ test('the shared snake and pause control are present on every built arcade page'
     assert.match(html,/<script type="module" src="\/assets\/snake.js"><\/script>/);
     assert.match(html,/data-lights-toggle/);
   }
+});
+
+
+test('a blocked snake sleeps its frame loop and wakes after pointer departure or scrolling',()=>{
+ const h=runtime({width:48,documentHeight:48});
+ h.emit('pointermove',{pointerType:'mouse',clientX:24,clientY:24});
+ for(let i=0;i<100;i++)h.tick();
+ assert.equal(h.pending.size,0,'stationary blocked decoration needs no frames');
+ const draws=h.draws;for(let i=0;i<100;i++)h.tick();assert.equal(h.draws,draws);
+ h.emit('scroll');h.tick();assert.ok(h.draws>draws,'scrolling redraws the frozen world position');
+ h.emit('pointerleave');h.tick();assert.equal(h.pending.size,1,'pointer departure restarts one loop');
 });

@@ -68,7 +68,7 @@ export class Snake {
     this.route = []; this.escapeRoute = []; this.pointer = null; this.plannedPointer = null;
     this.wanted = START_LENGTH; this.eaten = 0; this.round = 0;
     this.steps = 0; this.searches = 0; this.next = null; this.progress = 0;
-    this.growing = false;
+    this.growing = false; this.waiting = false;
     this.parents = new Int32Array(grid.size); this.queue = new Int32Array(grid.size);
     this.occupied = new Uint8Array(grid.size);
     this.escapeBlocked = new Uint32Array(grid.size);
@@ -90,6 +90,7 @@ export class Snake {
     this.onEvent('cycle', {round:this.round, phase:'start', pellets:[...this.food].map(this.grid.point)});
   }
   setPointer(point) {
+    this.waiting = false;
     this.pointer = point;
     // Compare against the last planned position, so many small moves accumulate.
     if (!this.plannedPointer || !point || distance(this.plannedPointer, point) >= GRID) {
@@ -183,7 +184,7 @@ export class Snake {
     return visit(next,0);
   }
   prepare() {
-    if (!this.body.length) return false;
+    if (!this.body.length || this.waiting) return false;
     if (this.next !== null) return true;
     const escapeRoute=this.escapeRoute;
     // Defer one segment of growth when releasing the tail is needed to escape.
@@ -205,7 +206,7 @@ export class Snake {
       // rediscover it. Defer growth while following that exact witness.
       this.growing=false;this.occupied.fill(0);
       for(let i=1;i<this.body.length-1;i++)this.occupied[this.body[i]]=1;
-      if(!escapeRoute.length||!this.legal(escapeRoute[0]))return false;
+      if(!escapeRoute.length||!this.legal(escapeRoute[0])){this.waiting=true;return false;}
       this.next=escapeRoute[0];this.escapeRoute=escapeRoute.slice(1);this.route=[];
       return true;
     }

@@ -98,3 +98,14 @@ test('cached continuations still enforce one adjacent, unobstructed grid edge',(
  const s=new Snake(makeGrid(720,720,[]));s.occupied.fill(0);
  assert.equal(s.legal(s.body[0]+3),false,'a cached target cannot bypass movement distance');
 });
+
+test('a stationary blocking pointer does no repeated pathfinding work',()=>{
+ const s=new Snake(makeGrid(48,48,[]));s.setPointer({x:24,y:24});
+ for(let i=0;i<100;i++)s.advance(16.67);
+ assert.equal(s.waiting,true);
+ const searches=s.searches;
+ for(let i=0;i<1000;i++)s.advance(16.67);
+ assert.equal(s.searches,searches);
+ s.setPointer(null);s.advance(200);
+ assert.equal(s.waiting,false,'pointer departure wakes movement');
+});

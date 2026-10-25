@@ -52,8 +52,8 @@ if (shell) {
       if (!allowed() || !snake?.body.length) { draw(); return; }
       if (last) snake.advance(Math.min(now - last,100));
       last = now;
-      if (!painted || now - painted >= FRAME_TIME) { draw(); painted = now; }
-      frame = requestAnimationFrame(tick);
+      if (snake.waiting || !painted || now - painted >= FRAME_TIME) { draw(); painted = now; }
+      if (!snake.waiting) frame = requestAnimationFrame(tick);
     }
     function sync() {
       cancelAnimationFrame(frame); frame = 0; last = 0; painted = 0;
@@ -61,14 +61,16 @@ if (shell) {
       else context.clearRect(0, 0, width, height);
     }
     function invalidate() { dirty = true; if (!frame && allowed()) frame = requestAnimationFrame(tick); }
+    function wake() { if (!frame && allowed()) { last=0;painted=0;frame=requestAnimationFrame(tick); } }
     function setPointer(event) {
       if (event.pointerType === 'touch') return;
       pointer = {x:event.clientX, y:event.clientY};
       snake?.setPointer({x:pointer.x, y:pointer.y + scrollY});
+      wake();
     }
     addEventListener('pointermove', setPointer, {passive:true});
-    document.documentElement.addEventListener('pointerleave', () => { pointer = null; snake?.setPointer(null); });
-    addEventListener('scroll', () => { if (pointer) snake?.setPointer({x:pointer.x, y:pointer.y + scrollY}); }, {passive:true});
+    document.documentElement.addEventListener('pointerleave', () => { pointer = null; snake?.setPointer(null); wake(); });
+    addEventListener('scroll', () => { if (pointer) snake?.setPointer({x:pointer.x, y:pointer.y + scrollY}); wake(); }, {passive:true});
     new ResizeObserver(invalidate).observe(shell);
     new MutationObserver(invalidate).observe(shell, {childList:true, subtree:true, attributes:true, attributeFilter:['hidden', 'open']});
     addEventListener('resize', invalidate);
