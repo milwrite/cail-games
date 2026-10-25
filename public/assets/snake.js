@@ -1,4 +1,5 @@
 import { makeGrid, Snake, GRID } from './snake-engine.js';
+import { paintSnake } from './snake-render.js';
 
 // One viewport canvas; one animation loop; layout work happens on invalidation.
 const shell = document.querySelector('.site-shell');
@@ -8,8 +9,8 @@ if (shell) {
   if (context) {
     document.body.append(canvas);
     const reduced = matchMedia('(prefers-reduced-motion: reduce)'), contrast = matchMedia('(forced-colors: active)');
-    const STEP_TIME = GRID / 72 * 1000, FRAME_TIME = 1000 / 30;
-    let snake, obstacles = [], cards = [], frame = 0, last = 0, painted = 0, accumulator = 0;
+    const FRAME_TIME = 1000 / 30;
+    let snake, obstacles = [], cards = [], frame = 0, last = 0, painted = 0;
     let width = 0, height = 0, dirty = true, departed = false, paused = false, layoutKey = '', pointer = null;
     let lastCard = -1;
     try { paused = sessionStorage.getItem('cail-lights-paused') === 'true'; } catch { /* Optional preference. */ }
@@ -33,46 +34,25 @@ if (shell) {
       layoutKey = key;
       snake = new Snake(makeGrid(width, documentHeight, obstacles, {x:width / 2, y:scrollY + 132}), {onEvent:signal});
       snake.setPointer(pointer && {x:pointer.x, y:pointer.y + scrollY});
-      accumulator = 0; last = 0;
+      last = 0;
     }
     const allowed = () => !paused && !reduced.matches && !contrast.matches && !document.hidden && !departed;
-    function draw(progress) {
-      context.clearRect(0, 0, width, height);
-      if (!allowed() || !snake) return;
-      context.fillStyle = '#f4c789'; context.globalAlpha = .95;
-      for (const id of snake.food) {
-        const p = snake.grid.point(id), y = p.y - scrollY;
-        if (y >= -4 && y <= height + 4) context.fillRect(p.x - 2, y - 2, 4, 4);
-      }
-      const points = snake.points(progress);
-      for (let i = points.length - 1; i >= 0; i--) {
-        const p = points[i], y = p.y - scrollY;
-        if (y < -6 || y > height + 6) continue;
-        context.globalAlpha = i ? .8 - i / Math.max(1, points.length) * .45 : 1;
-        context.fillStyle = i ? i < 6 ? '#b9dc99' : '#83eedc' : '#e2f9bd';
-        const size = i ? 6 : 10;
-        context.fillRect(p.x - size / 2, y - size / 2, size, size);
-      }
-      const head = points[0];
+    function draw() {
+      if (!allowed() || !snake) { context.clearRect(0,0,width,height);return; }
+      const head=paintSnake(context,snake,{width,height,scroll:scrollY});
       if (head) {
-        const neck = points[1] || {x:head.x - 1, y:head.y};
-        const dx = Math.sign(head.x - neck.x), dy = Math.sign(head.y - neck.y);
-        context.globalAlpha = 1; context.fillStyle = '#202224';
-        for (const side of [-1, 1]) context.fillRect(head.x + dx * 2 - dy * side * 2 - 1, head.y - scrollY + dy * 2 + dx * side * 2 - 1, 2, 2);
         const card = cards.findIndex(r => head.x >= r.left - GRID * 2 && head.x <= r.right + GRID * 2 && head.y >= r.top - GRID * 2 && head.y <= r.bottom + GRID * 2);
         if (card >= 0 && card !== lastCard) signal('visit', {index:card});
         lastCard = card;
       }
-      for (const r of obstacles) context.clearRect(r.left - 5, r.top - scrollY - 5, r.right - r.left + 10, r.bottom - r.top + 10);
     }
     function tick(now) {
       frame = 0;
       if (dirty) measure();
-      if (!allowed() || !snake?.body.length) { draw(1); return; }
-      if (last) accumulator += Math.min(now - last, 100);
+      if (!allowed() || !snake?.body.length) { draw(); return; }
+      if (last) snake.advance(Math.min(now - last,100));
       last = now;
-      while (accumulator >= STEP_TIME) { snake.step(); accumulator -= STEP_TIME; }
-      if (!painted || now - painted >= FRAME_TIME) { draw(accumulator / STEP_TIME); painted = now; }
+      if (!painted || now - painted >= FRAME_TIME) { draw(); painted = now; }
       frame = requestAnimationFrame(tick);
     }
     function sync() {
