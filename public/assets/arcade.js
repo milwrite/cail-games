@@ -79,7 +79,7 @@ control?.addEventListener('click', () => {
   sync();
   announce(paused ? 'Animations paused' : 'Animations resumed');
 });
-// Pick a game: the choice is immediate and focused; the snake follows when it may move.
+// Random game: the choice is immediate and focused; the snake follows when it may move.
 let lastPick = -1;
 picker?.addEventListener('click', () => {
   if (!cards.length) return;
@@ -91,7 +91,7 @@ picker?.addEventListener('click', () => {
   card.addEventListener('blur', () => card.classList.remove('is-picked'), {once:true});
   card.focus?.();
   card.scrollIntoView?.({block:'nearest', behavior:motion.matches ? 'auto' : 'smooth'});
-  announce(`Picked ${card.querySelector?.('h2')?.textContent || 'a game'}. Press Enter to view it`);
+  announce(`Random game: ${card.querySelector?.('h2')?.textContent || 'chosen'}. Press Enter to view it`);
   document.dispatchEvent(new CustomEvent('arcade:lure', {detail:{index}}));
 });
 document.addEventListener('arcade:snake-lure', event => {

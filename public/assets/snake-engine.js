@@ -2,7 +2,7 @@
 export const GRID = 12;
 export const CLEARANCE = 8;
 export const POINTER_RADIUS = 72;
-const START_LENGTH = 24, MAX_LENGTH = 64, FOOD_COUNT = 5;
+const START_LENGTH = 8, MAX_LENGTH = 40, GROWTH = 4, FOOD_COUNT = 5;
 const distance = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 const near = (a, b, radius) => (a.x - b.x) ** 2 + (a.y - b.y) ** 2 < radius ** 2;
 
@@ -88,6 +88,18 @@ export class Snake {
       this.food.add(choices[Math.min(choices.length - 1, low + Math.floor(this.random() * Math.max(1, high - low)))]);
     }
     this.onEvent('cycle', {round:this.round, phase:'start', pellets:[...this.food].map(this.grid.point)});
+  }
+  // The game starts over: a short snake at the starting point, with fresh pellets.
+  // Called when it has boxed itself in (the classic ending) or has grown to full length.
+  reset(reason = 'trapped') {
+    if (this.grid.start < 0) return;
+    this.body = [this.grid.start];
+    this.route = []; this.escapeRoute = []; this.plannedPointer = null;
+    this.wanted = START_LENGTH; this.next = null; this.progress = 0;
+    this.growing = false; this.waiting = false;
+    this.lures.clear(); this.resets = (this.resets || 0) + 1;
+    this.onEvent('reset', {reason});
+    this.refill();
   }
   // A lure is a visitor's pellet: the next target, outside the round's own five.
   lure(point, tag = null) {
@@ -246,11 +258,13 @@ export class Snake {
       this.onEvent('lure', {tag, head:this.grid.point(head)});
     }
     if (this.food.delete(head)) {
-      this.eaten++; this.wanted = Math.min(MAX_LENGTH, this.wanted + 8);
+      this.eaten++; this.wanted = Math.min(MAX_LENGTH, this.wanted + GROWTH);
       this.onEvent('eat', {round:this.round, count:this.eaten, head:this.grid.point(head)});
       if (!this.food.size) {
         this.onEvent('cycle', {round:this.round, phase:'complete', eaten:this.eaten});
-        this.refill(); this.route = [];
+        // A full-grown snake has finished its game: the next round starts small again.
+        if (this.wanted >= MAX_LENGTH) this.reset('grown');
+        else { this.refill(); this.route = []; }
       }
     }
   }
