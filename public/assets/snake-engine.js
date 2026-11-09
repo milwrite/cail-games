@@ -74,7 +74,7 @@ export class Snake {
     this.escapeBlocked = new Uint32Array(grid.size);
     this.escapeSeen = new Uint32Array(grid.size); this.escapeStamp = 0;
     this.release = new Uint16Array(grid.size); this.witnessPath = new Uint8Array(grid.size);
-    this.food = new Set(); this.refill();
+    this.food = new Set(); this.lures = new Map(); this.refill();
   }
   refill() {
     if (!this.body.length) return;
@@ -88,6 +88,23 @@ export class Snake {
       this.food.add(choices[Math.min(choices.length - 1, low + Math.floor(this.random() * Math.max(1, high - low)))]);
     }
     this.onEvent('cycle', {round:this.round, phase:'start', pellets:[...this.food].map(this.grid.point)});
+  }
+  // A lure is a visitor's pellet: the next target, outside the round's own five.
+  lure(point, tag = null) {
+    if (!this.body.length || !point) return -1;
+    const taken = new Set(this.body);
+    let best = -1, closest = Infinity;
+    for (const id of this.grid.foodNodes) {
+      if (taken.has(id) || this.lures.has(id)) continue;
+      const d = distance(this.grid.point(id), point);
+      if (d < closest) { best = id; closest = d; }
+    }
+    if (best < 0) return -1;
+    // At most three wait at once; the oldest gives way.
+    while (this.lures.size >= 3) this.lures.delete(this.lures.keys().next().value);
+    this.lures.set(best, tag);
+    this.route = []; this.waiting = false;
+    return best;
   }
   setPointer(point) {
     this.waiting = false;
@@ -120,7 +137,7 @@ export class Snake {
     let read = 0, write = 1, target = start, farthest = -1;
     while (read < write) {
       const id = queue[read++];
-      if (id !== start && this.food.has(id)) { target = id; break; }
+      if (id !== start && (this.lures.size ? this.lures.has(id) : this.food.has(id))) { target = id; break; }
       const score = distance(grid.point(id), grid.point(start)) + (this.pointer ? distance(grid.point(id), this.pointer) : 0);
       if (score > farthest) { farthest = score; target = id; }
       grid.neighbors(id).forEach((next, direction) => {
@@ -223,6 +240,11 @@ export class Snake {
     if (!this.growing) this.body.pop();
     this.next = null; this.progress = 0; this.steps++;
     const head=this.body[0];
+    if (this.lures.has(head)) {
+      const tag = this.lures.get(head); this.lures.delete(head);
+      this.wanted = Math.min(MAX_LENGTH, this.wanted + 4); this.route = [];
+      this.onEvent('lure', {tag, head:this.grid.point(head)});
+    }
     if (this.food.delete(head)) {
       this.eaten++; this.wanted = Math.min(MAX_LENGTH, this.wanted + 8);
       this.onEvent('eat', {round:this.round, count:this.eaten, head:this.grid.point(head)});

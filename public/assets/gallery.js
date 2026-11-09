@@ -43,8 +43,9 @@ for (const gallery of document.querySelectorAll('[data-gallery]')) {
     }, 6000);
   }
   function updateRotation() {
-    rotation.textContent = paused ? 'Continue' : 'Pause';
-    rotation.setAttribute('aria-label', paused ? 'Continue gallery' : 'Pause gallery');
+    // Named for the gallery, so it is never mistaken for the page's animation control.
+    rotation.textContent = paused ? 'Resume gallery' : 'Pause gallery';
+    rotation.removeAttribute?.('aria-label');
     schedule();
   }
   rotation.addEventListener('click', () => { paused = !paused; explicitContinue = !paused; updateRotation(); });

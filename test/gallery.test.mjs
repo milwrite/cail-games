@@ -16,7 +16,7 @@ function galleryHarness(reduced = false) {
   }));
   const slides = images.map((image, index) => ({hidden:index !== 0, querySelector:() => image}));
   const controls = {hidden:true};
-  const rotation = {textContent:'Pause', setAttribute() {}, addEventListener:(_, fn) => {events.click = fn;}};
+  const rotation = {textContent:'Pause gallery', setAttribute() {}, addEventListener:(_, fn) => {events.click = fn;}};
   const gallery = {
     querySelectorAll:() => slides,
     querySelector:selector => selector === '[data-controls]' ? controls : rotation,
@@ -64,12 +64,12 @@ test('pausing during a slow image load cannot cause a late slide change', async 
   h.events.click();
   h.loads[0].resolve();
   await transition;
-  assert.equal(h.rotation.textContent, 'Continue');
+  assert.equal(h.rotation.textContent, 'Resume gallery');
   assert.equal(h.slides[0].hidden, false);
   assert.equal(h.timers.size, 0);
   h.events.click();
   await h.tick();
-  assert.equal(h.rotation.textContent, 'Pause');
+  assert.equal(h.rotation.textContent, 'Pause gallery');
   assert.equal(h.slides[1].hidden, false);
 });
 
@@ -80,7 +80,7 @@ test('a failed screenshot keeps the working view and offers Continue', async () 
   h.loads[0].reject(new Error('image unavailable'));
   await transition;
   assert.equal(h.slides[0].hidden, false);
-  assert.equal(h.rotation.textContent, 'Continue');
+  assert.equal(h.rotation.textContent, 'Resume gallery');
   assert.equal(h.timers.size, 0);
 });
 
@@ -88,7 +88,7 @@ test('hidden and offscreen galleries cancel pending transitions; reduced motion 
   const reduced = galleryHarness(true);
   reduced.visible(true);
   assert.equal(reduced.loads.length, 0);
-  assert.equal(reduced.rotation.textContent, 'Continue');
+  assert.equal(reduced.rotation.textContent, 'Resume gallery');
   for (const stop of [h => h.visible(false), h => {h.document.hidden = true; h.events.visibility();}, h => {h.motion.matches = true; h.events.motion();}]) {
     const h = galleryHarness();
     h.visible(true);
@@ -109,5 +109,5 @@ test('explicit Continue resumes while the control has keyboard focus', async () 
   h.loads[0].resolve();
   await h.tick();
   assert.equal(h.slides[1].hidden, false);
-  assert.equal(h.rotation.textContent, 'Pause');
+  assert.equal(h.rotation.textContent, 'Pause gallery');
 });

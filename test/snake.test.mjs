@@ -91,7 +91,7 @@ function runtime({reduced=false,contrast=false,paused=false,width=390,documentHe
     body:{append(){}},createElement:()=>canvas,querySelector:()=>shell,querySelectorAll:()=>{measures++;return [];},
     dispatchEvent(){},fonts:{ready:{then(){}}}};
   runInNewContext(adapter,{document,makeGrid,Snake,paintSnake,GRID,innerHeight:844,scrollY:0,devicePixelRatio:3,
-    sessionStorage:{getItem:()=>String(paused)}, CustomEvent:class{},
+    localStorage:{getItem:()=>String(paused)}, CustomEvent:class{},
     matchMedia:q=>media[q.includes('reduced')?'reduced':'contrast'],addEventListener:(type,fn)=>listeners.set(type,fn),
     requestAnimationFrame:fn=>{pending.set(++sequence,fn);return sequence;},cancelAnimationFrame:id=>pending.delete(id),
     ResizeObserver:class{constructor(fn){resize=fn;}observe(){}},MutationObserver:class{observe(){}},
@@ -120,12 +120,30 @@ test('animation pauses, honors accessibility preferences and never accumulates l
 test('saved pause and reduced-motion preference avoid starting a frame loop',()=>{
   for(const options of [{paused:true},{reduced:true},{contrast:true}]) assert.equal(runtime(options).pending.size,0);
 });
+test('paused and reduced-motion pages show one still, full-length snake; forced colors show none',()=>{
+  for(const options of [{paused:true},{reduced:true}]) {
+    const h=runtime(options);
+    assert.ok(h.draws>=4,'a still snake has a body, a head and eyes');
+    const before=h.draws; for(let i=0;i<60;i++)h.tick(); assert.equal(h.draws,before,'nothing repaints while idle');
+    h.emit('scroll'); assert.ok(h.draws>before,'scrolling repaints the same pose at its document position');
+    assert.equal(h.pending.size,0);
+  }
+  assert.equal(runtime({contrast:true}).draws,0);
+});
+test('pausing freezes the snake where it is instead of removing it',()=>{
+  const h=runtime(); for(let i=0;i<60;i++)h.tick();
+  const before=h.draws;
+  h.emit('arcade:motion-change',{detail:{paused:true}});
+  assert.ok(h.draws>before,'the frozen frame is painted'); assert.equal(h.pending.size,0);
+});
 
 test('the shared snake and pause control are present on every built arcade page',async()=>{
   for(const route of ['', 'cadavre/', 'jeopardy/', 'cloze/', 'haggle/', 'langames/', 'cli-adventures/']) {
     const html=await readFile(new URL(`../dist/${route}index.html`,import.meta.url),'utf8');
     assert.match(html,/<script type="module" src="\/assets\/snake.js"><\/script>/);
-    assert.match(html,/data-lights-toggle/);
+    assert.match(html,/data-animation-toggle[^>]*>Pause animations</);
+    assert.doesNotMatch(html,/Pause lights/);
+    assert.match(html,/role="status" data-arcade-status/);
   }
 });
 

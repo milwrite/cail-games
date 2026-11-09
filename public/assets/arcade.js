@@ -1,13 +1,20 @@
 // Permanent accent colors with a gentle travelling highlight; no per-frame JS.
 const cards = [...document.querySelectorAll('.collection .game')];
 const letters = [...document.querySelectorAll('.title-letter')];
-const control = document.querySelector('[data-lights-toggle]');
+const control = document.querySelector('[data-animation-toggle]');
+const announcer = document.querySelector('[data-arcade-status]');
+const picker = document.querySelector('[data-pick-game]');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const contrast = matchMedia('(forced-colors: active)');
 const glows = new Map();
 const glowDuration = 6000;
 let visible = false, titleVisible = false, departed = false, paused = false;
-try { paused = sessionStorage.getItem('cail-lights-paused') === 'true'; } catch { /* Storage is optional. */ }
+// The choice is kept across reloads and tabs; the earlier per-tab key is still read.
+const PAUSE_KEY = 'cail-animations-paused', LAST_KEY = 'cail-last-played';
+const stored = (store, key) => { try { return store().getItem(key); } catch { return null; } };
+const remember = (key, value) => { try { localStorage.setItem(key, value); } catch { /* Keep working without storage. */ } };
+paused = (stored(() => localStorage, PAUSE_KEY) ?? stored(() => sessionStorage, 'cail-lights-paused')) === 'true';
+const announce = text => { if (announcer) announcer.textContent = text; };
 
 const waves = letters.map((letter, index) => {
   const accent = getComputedStyle(letter).getPropertyValue('--accent').trim();
@@ -52,9 +59,13 @@ function sync() {
   if (!active || !visible) clearGlows();
   waves.forEach(wave => active && titleVisible ? wave.play() : wave.pause());
   if (!control) return;
+  // The label names the action a press performs; a system preference wins over it.
   control.disabled = preference;
-  control.textContent = preference ? 'Lights still' : paused ? 'Resume lights' : 'Pause lights';
-  control.setAttribute('aria-label', preference ? 'Lights still: motion or contrast preference enabled' : control.textContent);
+  control.textContent = preference ? 'Animations off' : paused ? 'Resume animations' : 'Pause animations';
+  control.setAttribute('aria-label', preference
+    ? `Animations off: your device asks for ${motion.matches ? 'reduced motion' : 'high contrast'}`
+    : control.textContent);
+  control.setAttribute('title', preference ? 'Follows your device setting' : 'Title, card and snake animation only');
 }
 document.addEventListener('arcade:snake-visit', event => {
   const index = event.detail?.index;
@@ -63,9 +74,42 @@ document.addEventListener('arcade:snake-visit', event => {
 });
 control?.addEventListener('click', () => {
   paused = !paused;
-  try { sessionStorage.setItem('cail-lights-paused', String(paused)); } catch { /* Keep working without storage. */ }
+  remember(PAUSE_KEY, String(paused));
   document.dispatchEvent(new CustomEvent('arcade:motion-change', {detail:{paused}}));
   sync();
+  announce(paused ? 'Animations paused' : 'Animations resumed');
+});
+// Pick a game: the choice is immediate and focused; the snake follows when it may move.
+let lastPick = -1;
+picker?.addEventListener('click', () => {
+  if (!cards.length) return;
+  let index = Math.floor(Math.random() * cards.length);
+  if (cards.length > 1 && index === lastPick) index = (index + 1) % cards.length;
+  lastPick = index;
+  const card = cards[index];
+  card.classList.add('is-picked');
+  card.addEventListener('blur', () => card.classList.remove('is-picked'), {once:true});
+  card.focus?.();
+  card.scrollIntoView?.({block:'nearest', behavior:motion.matches ? 'auto' : 'smooth'});
+  announce(`Picked ${card.querySelector?.('h2')?.textContent || 'a game'}. Press Enter to view it`);
+  document.dispatchEvent(new CustomEvent('arcade:lure', {detail:{index}}));
+});
+document.addEventListener('arcade:snake-lure', event => {
+  const index = event.detail?.tag?.card;
+  if (running() && visible && Number.isInteger(index) && cards[index]) glow(cards[index]);
+});
+if (picker) picker.hidden = false;
+// Orientation: the card of the game last launched from here says so.
+const last = stored(() => localStorage, LAST_KEY);
+const played = last && cards.find(card => card.getAttribute?.('href') === `/${last}/`);
+if (played) {
+  const tag = document.createElement('span');
+  tag.className = 'game-tag'; tag.textContent = 'Last played';
+  played.querySelector('.game-action')?.before(tag);
+}
+document.querySelector('.launch')?.addEventListener?.('click', () => {
+  const id = location.pathname.split('/').filter(Boolean)[0];
+  if (/^[a-z][a-z0-9-]*$/.test(id || '')) remember(LAST_KEY, id);
 });
 if (control) control.hidden = false;
 motion.addEventListener('change', sync);

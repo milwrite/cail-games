@@ -59,12 +59,12 @@ export const games = [
     id:'cli-adventures', title:'CLI Adventures', author:'Zach Muhlbauer',
     github:'https://github.com/zmuhls/cli-adventures',
     play:'https://cli-adventures.ailab-452.workers.dev/', accent:'blue',
-    teaser:'Learn terminal commands through a filesystem treasure hunt',
+    teaser:'Learn the command line, then put an AI agent to work in it',
     paragraphs:[
-      'CLI Adventures teaches command-line basics through a sequence of interactive challenges in a simulated terminal. Players explore a virtual filesystem, read clues, extract an archive, and return a stolen treasure to its rightful directory.',
-      'The challenges introduce commands such as ls, cd, cat, pwd, mkdir, and mv. A current objective, contextual hints, command reference, and command history help players connect each instruction to its effect on files and folders.',
-      'The terminal and filesystem run in JavaScript in the browser. Players can experiment with creating, copying, moving, and deleting game files. This game uses fixed rules and written challenges; no language model or API key is required.',
+      'CLI Adventures teaches the command line across six chapters, then uses it to teach how AI agents work. Players recover a stolen file, install and sign in a command-line agent, run a local model, build a knowledge base, write standing instructions, and hunt down malware.',
+      'Chapter 1 runs on a real Linux inside the browser tab. The later chapters use a simulated terminal that plays the agent and its tools. A current objective, a command reference, and Tab completion connect each command to its effect on files and folders.',
+      'Bit, a sprite beside the prompt, gives hints in steps. A language model (DeepSeek V4 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide how much a hint reveals and whether a challenge is complete, so the game plays the same when the model is unavailable.',
     ],
-    note:'Progress lasts for the current tab and resets when the page reloads.',
+    note:'Progress is saved in this browser.',
   },
 ];
