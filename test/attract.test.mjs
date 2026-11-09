@@ -5,10 +5,12 @@ import { runInNewContext } from 'node:vm';
 
 const source = await readFile(new URL('../public/assets/arcade.js', import.meta.url), 'utf8');
 const accents = ['#83eedc', '#bcacff', '#f5a3cb', '#f4c789', '#b9dc99', '#91bfff'];
-function harness({reduced = false, contrast = false, savedPause = false, storageFails = false} = {}) {
+function harness({reduced = false, contrast = false, savedPause = false, legacyPause = false, storageFails = false} = {}) {
   let now = 0, id = 0;
   const pending = new Map(), events = [], waves = [], observers = new Map();
-  const stored = new Map(savedPause ? [['cail-lights-paused', 'true']] : []);
+  const stored = new Map(savedPause ? [['cail-animations-paused', 'true']] : []);
+  const session = new Map(legacyPause ? [['cail-lights-paused', 'true']] : []);
+  const status = {textContent:''};
   const eventTarget = () => {
     const callbacks = new Map();
     return {addEventListener:(name, callback) => callbacks.set(name, callback), emit:(name, event) => callbacks.get(name)?.(event)};
@@ -34,19 +36,20 @@ function harness({reduced = false, contrast = false, savedPause = false, storage
   const document = {...eventTarget(), hidden:false,
     dispatchEvent(event) { this.emit(event.type, event); },
     querySelectorAll:selector => selector.includes('collection') ? cards : letters,
-    querySelector:selector => ({'.collection':collection, '.arcade-title':title, '[data-lights-toggle]':control})[selector],
+    querySelector:selector => ({'.collection':collection, '.arcade-title':title, '[data-animation-toggle]':control, '[data-arcade-status]':status})[selector],
   };
   const window = eventTarget();
   runInNewContext(source, {
     document, Math, CustomEvent:class { constructor(type, {detail}) { this.type = type; this.detail = detail; } }, addEventListener:window.addEventListener,
     matchMedia:query => query.includes('reduced') ? motion : colors,
     getComputedStyle:letter => ({getPropertyValue:() => letter.accent}),
-    sessionStorage:{getItem(key) { if (storageFails) throw new Error('Unavailable'); return stored.get(key); }, setItem(key, value) { if (storageFails) throw new Error('Unavailable'); stored.set(key, value); }},
+    localStorage:{getItem(key) { if (storageFails) throw new Error('Unavailable'); return stored.get(key) ?? null; }, setItem(key, value) { if (storageFails) throw new Error('Unavailable'); stored.set(key, value); }},
+    sessionStorage:{getItem(key) { if (storageFails) throw new Error('Unavailable'); return session.get(key) ?? null; }},
     setTimeout:(fn, delay) => {pending.set(++id, {fn, due:now + delay}); return id;},
     clearTimeout:timer => pending.delete(timer),
     IntersectionObserver:class {constructor(callback) { this.callback = callback; } observe(target) { observers.set(target, this.callback); }},
   });
-  return {events, waves, cards, letters, document, motion, colors, control, pending, stored, window,
+  return {events, waves, cards, letters, document, motion, colors, control, status, pending, stored, window,
     visit:index => document.emit('arcade:snake-visit', {detail:{index}}),
     visible(grid = true, heading = true) {
       observers.get(collection)([{isIntersecting:grid}]);
@@ -124,26 +127,32 @@ test('title and collection visibility control their own effects independently', 
   h.titleVisible(true); allWaves(h, 'running'); assert.equal(h.pending.size, 0);
 });
 
-test('Pause lights persists, retains the wave position, and works without session storage', () => {
+test('Pause animations persists across reloads, names its next action, and works without storage', () => {
   const h = harness(); h.visible(); h.visit(0); h.advance(3100);
   h.waves.forEach(wave => { wave.currentTime = 4250; });
   h.control.emit('click');
   assert.equal(h.control.hidden, false);
-  assert.equal(h.control.attributes['aria-label'], 'Resume lights');
-  assert.equal(h.stored.get('cail-lights-paused'), 'true');
+  assert.equal(h.control.attributes['aria-label'], 'Resume animations');
+  assert.equal(h.control.textContent, 'Resume animations');
+  assert.equal(h.status.textContent, 'Animations paused');
+  assert.equal(h.stored.get('cail-animations-paused'), 'true');
   assert.equal(h.pending.size, 0); allWaves(h, 'paused');
   assert.equal(h.events.at(-1).lit, false);
   const count = h.events.filter(event => event.lit).length;
   h.visit(1); h.advance(60000); assert.equal(h.events.filter(event => event.lit).length, count);
   h.control.emit('click');
-  assert.equal(h.control.attributes['aria-label'], 'Pause lights');
-  assert.equal(h.stored.get('cail-lights-paused'), 'false');
+  assert.equal(h.control.attributes['aria-label'], 'Pause animations');
+  assert.equal(h.status.textContent, 'Animations resumed');
+  assert.equal(h.stored.get('cail-animations-paused'), 'false');
   allWaves(h, 'running'); assert.ok(h.waves.every(wave => wave.currentTime === 4250));
   assert.equal(h.pending.size, 0, 'resume waits for the next actual visit');
   h.visit(1); assert.equal(h.pending.size, 1);
   const restored = harness({savedPause:true}); restored.visible(); restored.visit(0); restored.advance(60000);
   allWaves(restored, 'paused'); assert.equal(restored.pending.size, 0);
-  assert.equal(restored.control.textContent, 'Resume lights');
+  assert.equal(restored.control.textContent, 'Resume animations');
+  assert.equal(restored.status.textContent, '', 'a restored choice is not announced as a new action');
+  const legacy = harness({legacyPause:true}); legacy.visible();
+  allWaves(legacy, 'paused'); assert.equal(legacy.control.textContent, 'Resume animations');
   const privateWindow = harness({storageFails:true}); privateWindow.visible();
   assert.doesNotThrow(() => privateWindow.control.emit('click'));
   allWaves(privateWindow, 'paused'); assert.equal(privateWindow.pending.size, 0);
@@ -155,7 +164,8 @@ test('motion and contrast preferences stop both effects without losing manual pa
     const media = preference === 'reduced' ? h.motion : h.colors;
     allWaves(h, 'paused'); assert.equal(h.pending.size, 0);
     assert.equal(h.events.filter(event => event.lit).length, 0);
-    assert.equal(h.control.disabled, true); assert.equal(h.control.textContent, 'Lights still');
+    assert.equal(h.control.disabled, true); assert.equal(h.control.textContent, 'Animations off');
+    assert.match(h.control.attributes['aria-label'], preference === 'reduced' ? /reduced motion/ : /high contrast/);
     media.matches = false; media.emit('change');
     allWaves(h, 'running'); assert.equal(h.control.disabled, false);
     h.visit(0); assert.equal(h.pending.size, 1);
@@ -166,7 +176,7 @@ test('motion and contrast preferences stop both effects without losing manual pa
     media.matches = true; media.emit('change');
     media.matches = false; media.emit('change');
     allWaves(h, 'paused'); assert.equal(h.pending.size, 0);
-    assert.equal(h.control.textContent, 'Resume lights');
+    assert.equal(h.control.textContent, 'Resume animations');
   }
 });
 

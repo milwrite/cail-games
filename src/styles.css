@@ -90,9 +90,15 @@ h1{margin:0 0 20px;font-size:clamp(40px,5.8vw,76px);font-weight:400;line-height:
 .arcade-snake{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .intro{position:relative}
 .arcade-controls{position:absolute;right:0;bottom:4px;display:flex;gap:8px}
-.snake-toggle{z-index:3;min-height:44px;min-width:112px;padding:8px 12px;border:1px solid var(--line);border-radius:2px;background:var(--charcoal);color:var(--muted);font:400 12px/1.4 var(--mono);cursor:pointer}
+.snake-toggle{z-index:3;min-height:44px;min-width:148px;padding:8px 12px;border:1px solid var(--line);border-radius:2px;background:var(--charcoal);color:var(--muted);font:400 12px/1.4 var(--mono);cursor:pointer}
 .snake-toggle[hidden]{display:none}
 .snake-toggle:hover{border-color:var(--cyan);color:var(--text)}
 .snake-toggle:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 .snake-toggle:disabled{cursor:default}
-@media(prefers-reduced-motion:reduce),(forced-colors:active){.arcade-snake{display:none}}
+/* Reduced motion keeps one still snake; forced colors cannot paint it legibly. */
+@media(forced-colors:active){.arcade-snake{display:none}}
+.arcade-controls{flex-wrap:wrap;justify-content:flex-end}
+.game.is-picked{border-color:var(--accent)}.game.is-picked .arrow{color:var(--accent)}
+.game-tag{align-self:flex-start;margin-top:auto;padding:2px 8px;border:1px solid var(--line);border-radius:2px;color:var(--muted);font:400 11px/1.6 var(--mono)}
+.game-tag+.game-action{margin-top:8px}
+@media(max-width:680px){.intro{padding-bottom:20px}.arcade-controls{position:static;justify-content:flex-start;margin-top:4px}.snake-toggle{flex:1 1 148px}}

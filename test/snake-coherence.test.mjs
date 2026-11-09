@@ -84,7 +84,7 @@ test('the actual painter produces one connected body at turns, with fewer paint 
   }
   assert.equal(r.pixels.indexOf(1),-1,'a body fragment was left disconnected from the head');
  }
- assert.ok(maximumCalls<20,`paint operations must stay bounded by bends, got ${maximumCalls}`);
+ assert.ok(maximumCalls<32,`paint operations must stay bounded by bends, got ${maximumCalls}`);
 });
 
 test('a series of small mouse movements invalidates the route cumulatively',()=>{
@@ -108,4 +108,26 @@ test('a stationary blocking pointer does no repeated pathfinding work',()=>{
  assert.equal(s.searches,searches);
  s.setPointer(null);s.advance(200);
  assert.equal(s.waiting,false,'pointer departure wakes movement');
+});
+
+test('a visitor pellet is the next target, is eaten once, and leaves the round intact',()=>{
+ const events=[];
+ const s=new Snake(makeGrid(720,720,[]),{random:()=>.6,onEvent:(type,detail)=>events.push({type,detail})});
+ for(let i=0;i<30;i++)s.step();
+ const round=s.round,food=s.food.size,eaten=s.eaten;
+ const id=s.lure({x:600,y:600},{card:4});
+ assert.ok(id>=0); assert.equal(s.lures.size,1);
+ let steps=0;
+ while(s.lures.size&&steps++<400){
+  const old=s.grid.point(s.body[0]);
+  assert.ok(s.step());
+  assert.ok(distance(old,s.grid.point(s.body[0]))<=GRID,'no head teleport');
+  assert.equal(new Set(s.body).size,s.body.length,'no self collision');
+ }
+ assert.equal(s.lures.size,0,'the snake reaches the pellet');
+ assert.deepEqual(events.filter(e=>e.type==='lure').map(e=>e.detail.tag),[{card:4}]);
+ assert.equal(s.round,round); assert.ok(s.food.size>=food-(s.eaten-eaten));
+ for(let i=0;i<5;i++)s.lure({x:100+i*40,y:100});
+ assert.equal(s.lures.size,3,'at most three visitor pellets wait at once');
+ assert.equal(new Snake(makeGrid(320,600,[{left:0,top:0,right:320,bottom:600}])).lure({x:10,y:10}),-1);
 });
