@@ -9,10 +9,10 @@ if (shell) {
   if (context) {
     document.body.append(canvas);
     const reduced = matchMedia('(prefers-reduced-motion: reduce)'), contrast = matchMedia('(forced-colors: active)');
-    const FRAME_TIME = 1000 / 30, POSE_STEPS = 30;
+    const FRAME_TIME = 1000 / 30, POSE_STEPS = 12, TRAPPED_MS = 1500;
     let snake, obstacles = [], cards = [], frame = 0, last = 0, painted = 0;
     let width = 0, height = 0, dirty = true, departed = false, paused = false, layoutKey = '', pointer = null;
-    let lastCard = -1, wasVisible = true;
+    let lastCard = -1, wasVisible = true, trapped = 0;
     // The choice outlives the tab; the earlier per-tab key is still honoured.
     const stored = (store, key) => { try { return store().getItem(key); } catch { return null; } };
     paused = (stored(() => localStorage, 'cail-animations-paused') ?? stored(() => sessionStorage, 'cail-lights-paused')) === 'true';
@@ -79,6 +79,13 @@ if (shell) {
         painted = now;
       }
       if (!snake.waiting) frame = requestAnimationFrame(tick);
+      // Boxed in with nowhere to go: after a moment it starts over, short, from the top.
+      else if (!trapped) trapped = setTimeout(() => {
+        trapped = 0;
+        if (!snake?.waiting || !allowed()) return;
+        snake.reset('trapped'); snake.setPointer(pointer && {x:pointer.x, y:pointer.y + scrollY});
+        wake();
+      }, TRAPPED_MS);
     }
     // One still frame, painted at once: paused and reduced-motion pages run no loop.
     function rest() {
@@ -87,6 +94,7 @@ if (shell) {
     }
     function sync() {
       cancelAnimationFrame(frame); frame = 0; last = 0; painted = 0;
+      clearTimeout(trapped); trapped = 0;
       if (allowed()) frame = requestAnimationFrame(tick);
       else if (shown()) rest();
       else context.clearRect(0, 0, width, height);
@@ -119,7 +127,7 @@ if (shell) {
     document.documentElement.addEventListener('pointerleave', () => { pointer = null; snake?.setPointer(null); wake(); });
     addEventListener('scroll', () => { if (pointer) snake?.setPointer({x:pointer.x, y:pointer.y + scrollY}); wake(); }, {passive:true});
     document.addEventListener('click', feed);
-    // "Pick a game for me" sends the snake to the card it chose.
+    // "Random game" sends the snake to the card it chose.
     document.addEventListener('arcade:lure', event => {
       const card = cards[event.detail?.index];
       if (!card || !allowed() || !snake) return;

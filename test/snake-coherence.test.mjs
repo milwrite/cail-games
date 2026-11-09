@@ -13,13 +13,35 @@ test('pointer avoidance never transfers the head to the tail',()=>{
  s.step();
  assert.ok(distance(head,s.grid.point(s.body[0]))<=GRID,'the head must travel at most one grid edge');
 });
-test('pellet rounds replenish food without cutting off the tail',()=>{
- const s=new Snake(makeGrid(720,720,[]),{random:()=>.6});
- for(let i=0;i<1200;i++){
-  const length=s.body.length;s.step();
-  assert.ok(s.body.length>=length,`body shrank from ${length} to ${s.body.length}`);
+test('the snake starts short, never loses tail mid-game, and starts over only once fully grown',()=>{
+ const events=[];
+ const s=new Snake(makeGrid(720,720,[]),{random:()=>.6,onEvent:(type,detail)=>events.push({type,detail})});
+ assert.equal(s.wanted,8,'a new snake is eight cells long');
+ let longest=0;
+ for(let i=0;i<3000;i++){
+  const length=s.body.length,resets=s.resets||0;s.step();
+  if((s.resets||0)>resets){
+   assert.equal(length,40,'only a full-grown snake starts over');
+   assert.deepEqual(s.body,[s.grid.start],'it starts over as a single cell at the starting point');
+   assert.equal(s.wanted,8); assert.equal(s.food.size,5,'with fresh pellets');
+  } else assert.ok(s.body.length>=length,`body shrank from ${length} to ${s.body.length}`);
+  longest=Math.max(longest,s.body.length);
  }
- assert.ok(s.round>2);
+ assert.equal(longest,40,'forty cells is full grown');
+ assert.ok(s.resets>=1,'a finished game starts another');
+ assert.deepEqual(events.filter(e=>e.type==='reset').map(e=>e.detail.reason).filter(r=>r!=='grown'),[]);
+});
+test('a boxed-in snake can be started over: short, at the start, and moving again',()=>{
+ const s=new Snake(makeGrid(720,720,[]),{random:()=>.6});
+ for(let i=0;i<300;i++)s.step();
+ s.lure({x:10,y:10});s.waiting=true;
+ s.reset('trapped');
+ assert.deepEqual(s.body,[s.grid.start]); assert.equal(s.waiting,false); assert.equal(s.lures.size,0);
+ assert.equal(s.next,null); assert.equal(s.progress,0);
+ for(let i=0;i<7;i++)assert.ok(s.step());
+ assert.ok(s.body.length>=7&&s.body.length<=8+4*s.eaten,'it regrows from one cell toward its short starting length');
+ const none=new Snake(makeGrid(320,600,[{left:0,top:0,right:320,bottom:600}]));
+ assert.doesNotThrow(()=>none.reset()); assert.deepEqual(none.body,[]);
 });
 test('every rendered bend retains its actual right-angle corner',()=>{
  const s=new Snake(makeGrid(720,720,[]),{random:()=>.6});
@@ -45,11 +67,13 @@ for(const [mode,seed] of [['desktop',2],['tablet',9],['phone',3],['phone',8],['p
  const s=new Snake(makeGrid(l.width,l.height,[...l.cards,...l.obstacles]),{random:()=>((r=(1664525*r+1013904223)>>>0)/0x100000000)});
  let waiting=0;
  for(let i=0;i<4000;i++){
-  const old=s.grid.point(s.body[0]),length=s.body.length;
+  const old=s.grid.point(s.body[0]),length=s.body.length,resets=s.resets||0;
   if(i%100===0)s.setPointer({x:old.x+18,y:old.y+24});
   if(i%100===15)s.setPointer(null);
   if(!s.step()&&!s.pointer)waiting++;else waiting=0;
   assert.ok(waiting<50,'movement must recover after the pointer leaves');
+  // Starting over (full grown) is the one moment the head and length may jump.
+  if((s.resets||0)>resets){assert.equal(length,40);continue;}
   assert.ok(distance(old,s.grid.point(s.body[0]))<=GRID,'no head teleport');
   assert.ok(s.body.length>=length,'no tail truncation');
   assert.equal(new Set(s.body).size,s.body.length,'no self collision');

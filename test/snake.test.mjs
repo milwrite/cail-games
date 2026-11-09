@@ -9,7 +9,7 @@ import {geometry, rect} from './snake-fixtures.mjs';
 
 function assertBody(snake, obstacles) {
   assert.equal(new Set(snake.body).size, snake.body.length, 'body never crosses itself');
-  assert.ok(snake.body.length <= 64);
+  assert.ok(snake.body.length <= 40);
   for (const point of snake.points(.5)) {
     for (const box of obstacles) assert.ok(point.x + 5 <= box.left || point.x - 5 >= box.right || point.y + 5 <= box.top || point.y - 5 >= box.bottom,
       `body overlaps object at ${point.x},${point.y}`);
@@ -78,7 +78,7 @@ test('a fully blocked page safely has no snake or food', () => {
 
 const adapter = (await readFile(new URL('../public/assets/snake.js', import.meta.url), 'utf8')).replace(/^import .*;\n/gm, '');
 function runtime({reduced=false,contrast=false,paused=false,width=390,documentHeight=900}={}) {
-  const listeners=new Map(), pending=new Map(); let now=0,sequence=0,draws=0,measures=0,resize;
+  const listeners=new Map(), pending=new Map(), timers=new Map(); let now=0,sequence=0,draws=0,measures=0,resize;
   const target=()=>({addEventListener(type,fn){listeners.set(type,fn);}});
   const context={setTransform(){},clearRect(){},fillRect(){draws++;}};
   const canvas={setAttribute(){},getContext:()=>context};
@@ -95,8 +95,9 @@ function runtime({reduced=false,contrast=false,paused=false,width=390,documentHe
     matchMedia:q=>media[q.includes('reduced')?'reduced':'contrast'],addEventListener:(type,fn)=>listeners.set(type,fn),
     requestAnimationFrame:fn=>{pending.set(++sequence,fn);return sequence;},cancelAnimationFrame:id=>pending.delete(id),
     ResizeObserver:class{constructor(fn){resize=fn;}observe(){}},MutationObserver:class{observe(){}},
+    setTimeout:(fn,ms)=>{timers.set(++sequence,{fn,ms});return sequence;},clearTimeout:id=>timers.delete(id),
   });
-  return {document,canvas,media,pending,get draws(){return draws;},get measures(){return measures;},
+  return {document,canvas,media,pending,timers,fireTimers(){const all=[...timers.values()];timers.clear();for(const t of all)t.fn();},get draws(){return draws;},get measures(){return measures;},
     emit(type,event){listeners.get(type)?.(event);},mediaChange(name,value){media[name].matches=value;mediaChange[name]();},resize(){resize();},
     tick(delta=16.67){now+=delta;const callbacks=[...pending.values()];pending.clear();for(const fn of callbacks)fn(now);assert.ok(pending.size<=1);},
   };
@@ -156,4 +157,18 @@ test('a blocked snake sleeps its frame loop and wakes after pointer departure or
  const draws=h.draws;for(let i=0;i<100;i++)h.tick();assert.equal(h.draws,draws);
  h.emit('scroll');h.tick();assert.ok(h.draws>draws,'scrolling redraws the frozen world position');
  h.emit('pointerleave');h.tick();assert.equal(h.pending.size,1,'pointer departure restarts one loop');
+});
+
+test('a snake left boxed in starts over after a moment, and pausing cancels that',()=>{
+ const h=runtime({width:48,documentHeight:48});
+ h.emit('pointermove',{pointerType:'mouse',clientX:24,clientY:24});
+ for(let i=0;i<100;i++)h.tick();
+ assert.equal(h.pending.size,0); assert.equal(h.timers.size,1,'one reset is scheduled while it is stuck');
+ assert.equal([...h.timers.values()][0].ms,1500);
+ const draws=h.draws; h.fireTimers(); h.tick();
+ assert.ok(h.draws>draws,'the restarted snake is painted');
+ for(let i=0;i<100;i++)h.tick();
+ assert.ok(h.timers.size<=1,'never more than one pending reset');
+ h.emit('arcade:motion-change',{detail:{paused:true}});
+ assert.equal(h.timers.size,0,'a paused page schedules nothing');
 });
