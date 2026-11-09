@@ -63,8 +63,8 @@ export const games = [
     paragraphs:[
       'CLI Adventures teaches the command line across six chapters, then uses it to teach how AI agents work. Players recover a stolen file, install and sign in a command-line agent, run a local model, build a knowledge base, write standing instructions, and hunt down malware.',
       'Chapter 1 runs on a real Linux inside the browser tab. The later chapters use a simulated terminal that plays the agent and its tools. A current objective, a command reference, and Tab completion connect each command to its effect on files and folders.',
-      'Bit, a sprite beside the prompt, gives hints in steps. A language model (DeepSeek V4 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide how much a hint reveals and whether a challenge is complete, so the game plays the same when the model is unavailable.',
+      'Bit, a sprite beside the prompt, gives a hint when clicked and a bigger one when asked again. A language model (DeepSeek V4 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide whether a challenge is complete, so the game plays the same when the model is unavailable.',
     ],
-    note:'Progress is saved in this browser. CUNY Login in the game keeps it on your account.',
+    note:'Progress is saved in this browser.',
   },
 ];
