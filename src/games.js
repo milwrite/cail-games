@@ -65,6 +65,6 @@ export const games = [
       'Chapter 1 runs on a real Linux inside the browser tab. The later chapters use a simulated terminal that plays the agent and its tools. A current objective, a command reference, and Tab completion connect each command to its effect on files and folders.',
       'Bit, a sprite beside the prompt, gives hints in steps. A language model (DeepSeek V4 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide how much a hint reveals and whether a challenge is complete, so the game plays the same when the model is unavailable.',
     ],
-    note:'Progress is saved in this browser.',
+    note:'Progress is saved in this browser. CUNY Login in the game keeps it on your account.',
   },
 ];
