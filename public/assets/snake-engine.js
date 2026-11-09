@@ -147,9 +147,20 @@ export class Snake {
     const {grid, parents, queue} = this, start = this.body[0];
     parents.fill(-1); parents[start] = start; queue[0] = start;
     let read = 0, write = 1, target = start, farthest = -1;
+    // Pellets are taken in one sweep, down the page on odd rounds and back up on even
+    // ones. Going for the nearest pellet sent the head back along its own body.
+    let goal = -1;
+    if (!this.lures.size) {
+      const down = this.round % 2 === 1;
+      for (const id of this.food) {
+        if (goal < 0) { goal = id; continue; }
+        const y = grid.point(id).y, best = grid.point(goal).y;
+        if (down ? y < best : y > best) goal = id;
+      }
+    }
     while (read < write) {
       const id = queue[read++];
-      if (id !== start && (this.lures.size ? this.lures.has(id) : this.food.has(id))) { target = id; break; }
+      if (id !== start && (this.lures.size ? this.lures.has(id) : id === goal)) { target = id; break; }
       const score = distance(grid.point(id), grid.point(start)) + (this.pointer ? distance(grid.point(id), this.pointer) : 0);
       if (score > farthest) { farthest = score; target = id; }
       grid.neighbors(id).forEach((next, direction) => {
