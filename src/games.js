@@ -17,7 +17,7 @@ export const games = [
     teaser:'Make a quiz board and question what you know',
     paragraphs:[
       'JeopardyLM is a customizable Jeopardy-style emulator for creating and playing quiz boards. A host supplies a system prompt, user input, optional reference material, provider settings, and model choice.',
-      'The app can use local Ollama or external OpenRouter inference to batch-generate categories, clues, and answers for a full board. The hosted arcade uses CUNY AI Lab access with DeepSeek V4 Flash as its default.',
+      'The app can use local Ollama or external OpenRouter inference to batch-generate categories, clues, and answers for a full board. The hosted arcade uses CUNY AI Lab access with DeepSeek V4.1 Flash as its default.',
       'Players can edit generated clues, run a multiplayer game, handle Daily Doubles and Final Jeopardy, keep score, and export or import the board for reuse.',
     ],
   },
@@ -27,7 +27,7 @@ export const games = [
     play:'https://cloze.ailab-452.workers.dev/', accent:'pink',
     teaser:'Read closely and find the missing words',
     paragraphs:[
-      'Cloze Reader turns Project Gutenberg passages into fill-in-the-blank rounds. Texts stream through the Hugging Face manu/project_gutenberg dataset. DeepSeek V4 Flash chooses blanked words rather than deleting fixed intervals, and the reader infers the missing terms from context.',
+      'Cloze Reader turns Project Gutenberg passages into fill-in-the-blank rounds. Texts stream through the Hugging Face manu/project_gutenberg dataset. DeepSeek V4.1 Flash chooses blanked words rather than deleting fixed intervals, and the reader infers the missing terms from context.',
       "The chat panel offers constrained hints about part of speech, sentence role, word category, and synonymy. The project links Wilson Taylor’s cloze test to masked language modeling, then hands the predictive task back to human readers.",
     ],
   },
@@ -63,7 +63,7 @@ export const games = [
     paragraphs:[
       'CLI Adventures teaches the command line across six chapters, then uses it to teach how AI agents work. Players recover a stolen file, install and sign in a command-line agent, run a local model, build a knowledge base, write standing instructions, and hunt down malware.',
       'Chapter 1 runs on a real Linux inside the browser tab. The later chapters use a simulated terminal that plays the agent and its tools. A current objective, a command reference, and Tab completion connect each command to its effect on files and folders.',
-      'Bit, a sprite beside the prompt, gives a hint when clicked and a bigger one when asked again. A language model (DeepSeek V4 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide whether a challenge is complete, so the game plays the same when the model is unavailable.',
+      'Bit, a sprite beside the prompt, gives a hint when clicked and a bigger one when asked again. A language model (DeepSeek V4.1 Flash through the CUNY AI Lab) words Bit’s lines and the in-game agent’s answers; fixed rules decide whether a challenge is complete, so the game plays the same when the model is unavailable.',
     ],
     note:'Progress is saved in this browser.',
   },
